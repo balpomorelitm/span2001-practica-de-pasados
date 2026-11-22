@@ -1,0 +1,90 @@
+{
+  "mode": "Built-in image_gen; generation with style reference; guide contact sheet edited for safe crop margins.",
+  "style": "Original hand-drawn didactic ink cartoons following the supplied visual reference.",
+  "transparent_background": false,
+  "outputDirectory": "dist/assets/illustrations",
+  "outputFormat": "JPEG quality90, PNG source retained",
+  "cropOrder": [
+    "top left",
+    "top right",
+    "bottom left",
+    "bottom right"
+  ],
+  "assets": [
+    {
+      "id": "comic-sheet-a",
+      "prompt": "Use case: illustration-story. Input image is a STYLE REFERENCE ONLY for original artwork. Create a square contact sheet containing EXACTLY FOUR separate narrative cartoon illustrations in a clean 2x2 grid, each quadrant with generous WHITE margins; no panel borders; nothing crosses the central axes. Match the reference's humorous Spanish grammar-book cartoon language: loose irregular black ink outlines, comically tall narrow heads, very long expressive pointed noses, tiny dot eyes, exaggerated gestures, small slender bodies, simple hands, flat lively spot colours and a few pale mint or pale yellow washes. Clear hand-drawn 2D editorial comics for ADULT language students, light and witty. White background. Mostly white space. NOT realistic, NOT semi-realistic, NOT gouache painting, no detailed skin shading, no rich textured fabric, no glossy 3D, no geometric SVG shapes. Use deep green, light mint, orange, mustard, muted blue, and warm peach. Avoid copying any existing characters or exact scenes. Draw original distinct characters. No words, letters, numbers, captions, labels, logos, watermarks or speech bubbles with writing. Books and papers blank.\nTOP LEFT: Three university students studying Spanish around a table, an East Asian woman points to a blank open book while a curly-haired male student and woman student listen, small stack of books, relaxed intelligent fun. TOP RIGHT: A frightened long-nosed young man opens his apartment door and discovers a smiling older woman with a cat peeking from a cardboard box; surprise and relief, a lamp and simple door frame only. BOTTOM LEFT: A young woman in a kitchen gets wonderful news by phone, smiling with happy tears, pan and wooden spoon on a counter, few vegetables; simple clear gesture. BOTTOM RIGHT: Family laughing uncontrollably as a dog proudly holds a striped sock while a cousin sits on the floor, a small camera on a chair facing the group. Keep all four drawings legible at thumbnail size, full essential objects visible.",
+      "names": [
+        "course-study",
+        "story-01",
+        "story-02",
+        "story-03"
+      ],
+      "source": "assets/source-illustrations/comic-sheet-a.png"
+    },
+    {
+      "id": "comic-sheet-b",
+      "prompt": "Use case: illustration-story. Input image is a STYLE REFERENCE ONLY for original artwork. Create a square contact sheet containing EXACTLY FOUR separate narrative cartoon illustrations in a clean 2x2 grid, each quadrant with generous WHITE margins; no panel borders; nothing crosses the central axes. Match the reference's humorous Spanish grammar-book cartoon language: loose irregular black ink outlines, comically tall narrow heads, very long expressive pointed noses, tiny dot eyes, exaggerated gestures, small slender bodies, simple hands, flat lively spot colours and a few pale mint or pale yellow washes. Clear hand-drawn 2D editorial comics for ADULT language students, light and witty. White background. Mostly white space. NOT realistic, NOT semi-realistic, NOT gouache painting, no detailed skin shading, no rich textured fabric, no glossy 3D, no geometric SVG shapes. Use deep green, light mint, orange, mustard, muted blue, and warm peach. Avoid copying any existing characters or exact scenes. Draw original distinct characters. No words, letters, numbers, captions, labels, logos, watermarks or speech bubbles with writing. Books and papers blank.\nTOP LEFT: A daughter at her birthday dinner is speechless with emotion over an old wristwatch in an open gift box while both parents smile, cake and simple table. TOP RIGHT: A schoolgirl returns a folded red umbrella to an astonished adult at a library doorway, blank tag and few books. BOTTOM LEFT: Two children hang a blank white sheet in a garage for a neighbourhood summer cinema, adults carrying folding chairs, projector on stool. BOTTOM RIGHT: Four adult friends shelter from rain beneath a small picnic roof sharing tortilla and bread, cheerful faces. Preserve the reference's simple flat-colour humorous cartoon art with very long noses, NOT painterly. Each full scene must stay inside its own quadrant with at least35pixels of white margin.",
+      "names": [
+        "story-04",
+        "story-05",
+        "story-06",
+        "story-07"
+      ],
+      "source": "assets/source-illustrations/comic-sheet-b.png"
+    },
+    {
+      "id": "comic-sheet-c",
+      "prompt": "Use case: illustration-story. Input image is a STYLE REFERENCE ONLY for original artwork. Create a square contact sheet containing EXACTLY FOUR separate narrative cartoon illustrations in a clean 2x2 grid, each quadrant with generous WHITE margins; no panel borders; nothing crosses the central axes. Match the reference's humorous Spanish grammar-book cartoon language: loose irregular black ink outlines, comically tall narrow heads, very long expressive pointed noses, tiny dot eyes, exaggerated gestures, small slender bodies, simple hands, flat lively spot colours and a few pale mint or pale yellow washes. Clear hand-drawn 2D editorial comics for ADULT language students, light and witty. White background. Mostly white space. NOT realistic, NOT semi-realistic, NOT gouache painting, no detailed skin shading, no rich textured fabric, no glossy 3D, no geometric SVG shapes. Use deep green, light mint, orange, mustard, muted blue, and warm peach. Avoid copying any existing characters or exact scenes. Draw original distinct characters. No words, letters, numbers, captions, labels, logos, watermarks or speech bubbles with writing. Books and papers blank.\nTOP LEFT: A woman and actor outside a cafe exchange two similar BLUE suitcases. The open case contains a funny lion costume; the actor wears a simple theatre costume. TOP RIGHT: A nervous female bookseller on her first day is surprised by her smiling father bringing a cloth-wrapped lunch, amused customer by book counter. BOTTOM LEFT: During a blackout, neighbours and flatmates sit around candles, bread and cheese while a child tells an exaggerated ghost story; everyone amused by his gestures. BOTTOM RIGHT: A grandmother and granddaughter make an apple tart, rolling pin and dough on a kitchen table with apples. Same reference's long-nosed humorous thin-bodied ink cartoons and simple flat colors. Every essential person and prop must stay well inside each quadrant, generous white margins, never cross central axes.",
+      "names": [
+        "story-08",
+        "story-09",
+        "story-10",
+        "story-11"
+      ],
+      "source": "assets/source-illustrations/comic-sheet-c.png"
+    },
+    {
+      "id": "comic-sheet-d",
+      "prompt": "Use case: illustration-story. Input image is a STYLE REFERENCE ONLY for original artwork. Create a square contact sheet containing EXACTLY FOUR separate narrative cartoon illustrations in a clean 2x2 grid, each quadrant with generous WHITE margins; no panel borders; nothing crosses the central axes. Match the reference's humorous Spanish grammar-book cartoon language: loose irregular black ink outlines, comically tall narrow heads, very long expressive pointed noses, tiny dot eyes, exaggerated gestures, small slender bodies, simple hands, flat lively spot colours and a few pale mint or pale yellow washes. Clear hand-drawn 2D editorial comics for ADULT language students, light and witty. White background. Mostly white space. NOT realistic, NOT semi-realistic, NOT gouache painting, no detailed skin shading, no rich textured fabric, no glossy 3D, no geometric SVG shapes. Use deep green, light mint, orange, mustard, muted blue, and warm peach. Avoid copying any existing characters or exact scenes. Draw original distinct characters. No words, letters, numbers, captions, labels, logos, watermarks or speech bubbles with writing. Books and papers blank.\nTOP LEFT: Two adult women friends embrace goodbye beside a simple train door, one holds a suitcase and small sandwich bag, tender affectionate farewell. TOP RIGHT: A female museum guide and curious boy inspect an old open suitcase in a glass case, containing blank letters, blanket and metal cup; a hint of old station arch. BOTTOM LEFT: A Madrid family in simple 1969 clothes and furniture watches a small wooden black-and-white TV showing an astronaut and lunar lander; amazed twelve-year-old girl. BOTTOM RIGHT: A Spanish woman in 1977 dress puts a plain folded ballot into a transparent ballot box while seated worker and two neighbours watch, no flags, no writing. Same humorous long-nosed thin-bodied ink-cartoon reference style, simple flat colors, NOT painterly. Four isolated vignettes, generous white margins, all people and props entirely inside their own quadrant, never cross central axes.",
+      "names": [
+        "story-12",
+        "story-13",
+        "story-14",
+        "story-15"
+      ],
+      "source": "assets/source-illustrations/comic-sheet-d.png"
+    },
+    {
+      "id": "comic-guide-scenes",
+      "prompt": "Use case: scientific-educational. The supplied image is a STYLE reference only. Create ORIGINAL humorous Spanish grammar-book style cartoons: loose black ink line, long narrow expressive faces and very long pointed noses, dot eyes, small slim bodies, exaggerated readable gestures, flat green/mint/ochre/orange/blue spot colours, opaque WHITE background, clean and uncluttered with ample whitespace. Match reference's simple lively comic art. No realistic rendering, no painterly detail, no 3D, no geometric SVG style. NO text, numbers, letters, writing, logos or watermarks. Every paper/screen is blank. Educational accuracy and obvious action matter more than decoration. Square contact sheet with exactly FOUR separate square scenes in a2x2grid, generous white margins, no panel outlines, no central-axis crossing. TOP LEFT: An adult long-nosed woman with orange hair stands at her living-room window watching heavy rain outside over one small tiled-roof house and a tree; the window frame creates a snapshot of rain already in progress; she calmly holds a mug; outside only rain, no sun. TOP RIGHT: Show the rainy afternoon as a WHOLE bounded episode using a small horizontal THREE-FRAME filmstrip within this quadrant: same tiled-roof house under daytime clouds and rain, same house in sustained rain, then same house in evening with rain ending and clouds clearing. Film perforations and arrows may be drawn but no writing. A small long-nosed adult narrator gestures toward the strip. This is an overall retelling, not a claim that preterite is short. BOTTOM LEFT: A long-nosed curly-haired male adult sits comfortably on a green sofa reading an open blank book; a phone rests SILENT on a little side table; he is absorbed and unaware of any event, no motion lines at phone. BOTTOM RIGHT: The SAME male reader on the SAME sofa with book is startled as the phone on side table RINGS with clear comic sound-motion lines; he turns his head toward phone, reading is interrupted. Keep scenes consistent.",
+      "edit": {
+        "prompt": "Keep exactly these four original grammar cartoons and the same comic art. This is a precise layout repair for cutting the sheet into four equal quadrants. Scale EACH of the four vignettes down approximately 16 percent around the centre OF ITS OWN QUADRANT, so every vignette has a generous completely white margin on every side. In particular move the narrator in the TOP RIGHT vignette fully inside that quadrant; no part of his hair, face, torso, hand or filmstrip may cross the sheet's central vertical axis. No objects in any quadrant may cross the central horizontal or vertical axis. Maintain all existing subjects, scene differences, colors, characters and blank white background. Preserve a square2x2grid, no borders, no text. Keep all essential action, do not crop any person. This is only spacing and margin correction, not a redesign.",
+        "reference": "assets/source-illustrations/comic-guide-scenes-source.png"
+      },
+      "names": [
+        "guide-rain-inside",
+        "guide-rain-whole",
+        "guide-reading-background",
+        "guide-phone-event"
+      ],
+      "source": "assets/source-illustrations/comic-guide-scenes.png"
+    },
+    {
+      "id": "comic-guide-work-inside",
+      "prompt": "Use case: scientific-educational. The supplied image is a STYLE reference only. Create ORIGINAL humorous Spanish grammar-book style cartoons: loose black ink line, long narrow expressive faces and very long pointed noses, dot eyes, small slim bodies, exaggerated readable gestures, flat green/mint/ochre/orange/blue spot colours, opaque WHITE background, clean and uncluttered with ample whitespace. Match reference's simple lively comic art. No realistic rendering, no painterly detail, no 3D, no geometric SVG style. NO text, numbers, letters, writing, logos or watermarks. Every paper/screen is blank. Educational accuracy and obvious action matter more than decoration. One square isolated vignette with generous white margins, no frame. A long-nosed adult woman with dark ponytail, green cardigan and orange skirt is in the middle of working at a small office desk, writing on blank papers beside a simple desktop computer. A colleague stands nearby holding a folder and gesturing to her ongoing work. Show an ordinary past moment INSIDE a longer employment period, relaxed concentrated ongoing action. Very simple office chair, small plant, few folders. She is still seated and working; no doorway departure, no packed belongings. No timelines, arrows or captions; timeline will be added outside image by website.",
+      "names": [
+        "guide-work-inside"
+      ],
+      "source": "assets/source-illustrations/comic-guide-work-inside.png"
+    },
+    {
+      "id": "comic-guide-work-whole",
+      "prompt": "Use case: scientific-educational. The supplied image is a STYLE reference only. Create ORIGINAL humorous Spanish grammar-book style cartoons: loose black ink line, long narrow expressive faces and very long pointed noses, dot eyes, small slim bodies, exaggerated readable gestures, flat green/mint/ochre/orange/blue spot colours, opaque WHITE background, clean and uncluttered with ample whitespace. Match reference's simple lively comic art. No realistic rendering, no painterly detail, no 3D, no geometric SVG style. NO text, numbers, letters, writing, logos or watermarks. Every paper/screen is blank. Educational accuracy and obvious action matter more than decoration. One square isolated vignette with generous white margins, no frame. The SAME long-nosed adult woman with dark ponytail, green cardigan and orange skirt is leaving a small office on her LAST day, carrying a cardboard box containing a potted plant and folders. She smiles and waves goodbye to a colleague still beside a simple office desk and chair. Simple doorway and clear farewell movement show employment period viewed as a COMPLETE bounded episode. No readable writing, no timelines, no captions. Keep humorous thin body proportions and ink-line cartoon style precisely like reference.",
+      "names": [
+        "guide-work-whole"
+      ],
+      "source": "assets/source-illustrations/comic-guide-work-whole.png"
+    }
+  ]
+}

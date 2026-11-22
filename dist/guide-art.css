@@ -1,0 +1,91 @@
+/* Generated illustrations for the first three interactive guide comparisons.
+   The existing calendar comparison is deliberately left unchanged. */
+.diagram-art:has(.guide-illustration-panel) {
+  width: 100%;
+  max-width: 360px;
+  margin-inline: auto;
+}
+.guide-illustration-panel {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e3eae6;
+  border-radius: 14px;
+}
+.guide-illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: #fff;
+}
+.guide-time-comparison {
+  padding: 0 22px 18px;
+  color: #024638;
+  font: 600 .75rem/1.4 var(--sans, system-ui, sans-serif);
+}
+.guide-time-heading {
+  margin-bottom: 14px;
+  text-align: center;
+}
+.guide-time-track {
+  position: relative;
+  height: 7px;
+  margin-inline: 5px;
+  border-radius: 9px;
+  background: #a9cbc1;
+}
+.guide-time-marker {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  width: 15px;
+  height: 15px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #024638;
+  box-shadow: 0 0 0 1px #024638;
+  transform: translate(-50%, -50%);
+}
+.guide-time-boundary {
+  position: absolute;
+  top: -5px;
+  width: 3px;
+  height: 17px;
+  border-radius: 2px;
+  background: #668b7f;
+}
+.guide-time-boundary.start { left: 0; }
+.guide-time-boundary.end { right: 0; }
+.guide-time-years {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: #435e54;
+  font-variant-numeric: tabular-nums;
+}
+.guide-time-reference {
+  position: absolute;
+  left: 60%;
+  transform: translateX(-50%);
+}
+.guide-time-comparison.is-whole .guide-time-track,
+.guide-time-comparison.is-whole .guide-time-boundary {
+  background: #a65a32;
+}
+.guide-time-comparison.is-whole .guide-time-marker {
+  display: none;
+}
+.guide-time-comparison.is-whole .guide-time-reference {
+  color: #52675f;
+  font-weight: 400;
+}
+@media (max-width: 650px) {
+  .diagram-art:has(.guide-illustration-panel) {
+    max-width: 320px;
+  }
+  .diagram-art:has(.guide-illustration-panel) + .diagram-caption {
+    padding-top: 1rem;
+  }
+}
