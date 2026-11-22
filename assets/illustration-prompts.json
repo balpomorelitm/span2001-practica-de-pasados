@@ -84,7 +84,8 @@
       "names": [
         "guide-work-whole"
       ],
-      "source": "assets/source-illustrations/comic-guide-work-whole.png"
+      "source": "assets/source-illustrations/comic-guide-work-whole.png",
+      "editRecord": "assets/work-arm-correction.json"
     }
   ]
 }

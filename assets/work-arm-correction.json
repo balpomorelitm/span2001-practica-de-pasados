@@ -1,0 +1,7 @@
+{
+  "mode": "Built-in image_gen edit",
+  "reference": "assets/source-illustrations/comic-guide-work-whole-source.png",
+  "finalSource": "assets/source-illustrations/comic-guide-work-whole.png",
+  "publishedImage": "dist/assets/illustrations/guide-work-whole.jpg",
+  "prompt": "Use case: precise-object-edit. Correct ONLY the woman's arm anatomy in this educational cartoon. The woman carrying the box currently has an implausible duplicated arm arrangement. REMOVE her entire raised waving arm, raised hand, and its motion marks next to her head. Redraw her pose with EXACTLY TWO arms, both bent down in front of her torso holding the cardboard box securely from below, one hand at each lower corner. The two arms must originate from TWO DIFFERENT shoulders; if necessary turn her upper torso slightly toward the viewer so both shoulders and both separate arms read clearly. No arm or hand raised beside her face. Keep the cardboard box with its plant and folders, her bag, skirt, walking legs, hair, face and clothing colours. Keep the male colleague exactly as he is, waving goodbye behind the desk. Preserve the doorway, furniture, white background, square composition, original flat-colour humorous long-nosed cartoon style and black line quality. Do not add any words, numbers, logos or other objects. One precise anatomy correction, no redesign."
+}
