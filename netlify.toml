@@ -1,0 +1,8 @@
+[build]
+  command = "npm test && npm run check && npm run check:ui"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Navigation uses hash links, so no catch-all redirect is needed.

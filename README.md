@@ -72,6 +72,26 @@ La validación de plantillas y de interacciones simuladas no sustituye una inspe
 
 Para una revisión docente, conviene probar «Dos opciones posibles», leer las respuestas alternativas de los relatos y revisar los dos textos históricos. Los personajes son ficticios; las fechas se apoyan en NASA y Congreso de los Diputados. La guía enlaza a RAE–ASALE y su explicación del aspecto.
 
+## Publicación en Netlify
+
+Web: https://span2001-practica-de-pasados.netlify.app/ . Netlify publica únicamente `dist`; el proyecto editable, las láminas y los prompts permanecen en GitHub. `netlify.toml` declara el directorio y las comprobaciones para una posible conexión futura del repositorio. La publicación actual es manual mediante la API de Netlify, sin enlazar automáticamente GitHub.
+
+`netlify-site.json` conserva el identificador público del sitio, su nombre y URL; no contiene credenciales. Para revisar el destino y los archivos sin consultar ni modificar Netlify:
+
+```powershell
+npm run deploy:netlify
+```
+
+Después de guardar todos los cambios en un commit, publica con:
+
+```powershell
+npm run deploy:netlify -- --publish
+```
+
+El script exige un repositorio limpio, ejecuta las pruebas y los dos validadores, reutiliza la sesión local de Netlify CLI o `NETLIFY_AUTH_TOKEN`, y envía un inventario SHA-1 de `dist` a la [API oficial de Netlify](https://docs.netlify.com/api-and-cli-guides/api-guides/get-started-with-api/#file-digest-method). Solo sube los archivos nuevos y espera a que el despliegue figure como la versión pública. No imprime ni guarda tokens. Si se utiliza otro equipo, inicia sesión con Netlify CLI o configura el token en el entorno; no lo añadas al repositorio.
+
+Las rutas son enlaces por hash, por lo que no necesitan una redirección global. El progreso se guarda por dominio en el navegador: las notas de GitHub Pages y Netlify son independientes.
+
 ## Publicación en GitHub Pages
 
 Web: https://balpomorelitm.github.io/span2001-practica-de-pasados/ . Repositorio: https://github.com/balpomorelitm/span2001-practica-de-pasados . La rama `main` guarda el proyecto editable; la rama `gh-pages` contiene únicamente `dist`. Las imágenes de trabajo y los prompts quedan fuera del directorio publicado. Se mantienen los enlaces por hash y el corrector funciona en el navegador sin servicios de IA.
