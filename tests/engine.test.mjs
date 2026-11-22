@@ -49,10 +49,52 @@ test('a whole multiword perfect is one answer and normalises internal whitespace
   values[extra.gaps[0].id]=' HA   GRABADO ';
   const grade=gradeActivity(extra,values); assert.equal(grade.total,2); assert.equal(grade.points,2);
 });
-test('blanks do not create a first attempt', () => {
-  const state={answers:{},self:{},first:null}; const activity={gaps:[gap]};
-  const incomplete=gradeActivity(activity,{});
-  assert.equal(incomplete.complete,false); assert.equal(recordAttempt(state,incomplete),state);
+test('checking a blank answer counts it as an error with the expected form and its explanation', () => {
+  const result=gradeGap(gap,'   ');
+  assert.equal(result.status,'empty'); assert.equal(result.points,0);
+  assert.equal(result.label,'Not answered · incorrect');
+  assert.match(result.feedback,/No answer: this counts as incorrect \(0 points\)/);
+  assert.match(result.feedback,/expected answer is habló/);
+  assert.ok(result.feedback.endsWith(gap.answers[0].feedback));
+  assert.equal(result.answer,gap.answers[0]);
+});
+test('an entirely blank submission records a zero first attempt that survives storage', () => {
+  const activity={gaps:[gap,{...gap,id:'second'}]};
+  const grade=gradeActivity(activity,{});
+  assert.equal(grade.complete,false); assert.equal(grade.points,0); assert.equal(grade.total,2); assert.equal(grade.percent,0);
+  const progress=emptyProgress();
+  progress.activities.example=recordAttempt(entryFor(progress,'example'),grade);
+  const saved=parseProgress(JSON.stringify(progress)).activities.example;
+  assert.deepEqual(saved.first,{points:0,total:2,percent:0});
+  assert.deepEqual(saved.best,saved.first); assert.deepEqual(saved.latest,saved.first);
+  assert.equal(saved.attempts,1); assert.equal(saved.checked,true); assert.equal(saved.completed,false); assert.equal(saved.submittedNonempty,false);
+});
+test('a partial submission uses every gap in the denominator and preserves its first score on revision', () => {
+  const activity={gaps:[gap,{...gap,id:'choice',options:['habló','hablaba']},{...gap,id:'blank'}]};
+  const partial=gradeActivity(activity,{test:'hablo',choice:'habló'});
+  assert.equal(partial.complete,false); assert.equal(partial.points,1.5); assert.equal(partial.total,3); assert.equal(partial.percent,50);
+  assert.equal(partial.results.test.status,'accent'); assert.equal(partial.results.choice.status,'correct'); assert.equal(partial.results.blank.points,0);
+  let state=recordAttempt({answers:{test:'hablo',choice:'habló'},self:{},attempts:0},partial);
+  assert.equal(state.completed,false); assert.equal(state.submittedNonempty,true);
+  const restored=parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{partial:state}}));
+  assert.equal(restored.activities.partial.completed,false);
+  const full=gradeActivity(activity,{test:'habló',choice:'habló',blank:'habló'});
+  state=recordAttempt(state,full);
+  assert.deepEqual(state.first,{points:1.5,total:3,percent:50});
+  assert.deepEqual(state.best,{points:3,total:3,percent:100}); assert.deepEqual(state.latest,state.best);
+  assert.equal(state.attempts,2); assert.equal(state.completed,true);
+  state=recordAttempt(state,gradeActivity(activity,{}));
+  assert.equal(state.first.points,1.5); assert.equal(state.best.points,3); assert.equal(state.latest.points,0); assert.equal(state.attempts,3);
+  assert.equal(state.completed,true);
+});
+test('a nonempty check remains recorded after all answers are cleared', () => {
+  const activity={gaps:[gap,{...gap,id:'blank'}]};
+  let state=recordAttempt({answers:{test:'wrong'},self:{},attempts:0},gradeActivity(activity,{test:'wrong'}));
+  assert.equal(state.submittedNonempty,true); assert.equal(state.completed,false); assert.equal(state.first.points,0);
+  state=recordAttempt({...state,answers:{}},gradeActivity(activity,{}));
+  assert.equal(state.submittedNonempty,true); assert.equal(state.completed,false);
+  const restored=parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{example:state}})).activities.example;
+  assert.equal(restored.submittedNonempty,true);
 });
 test('partial points are included in the percentage', () => {
   const result=gradeActivity({gaps:[gap]},{test:'hablo'});
@@ -75,6 +117,48 @@ test('saved progress round-trips and broken or outdated data resets safely', () 
   assert.deepEqual(parseProgress(JSON.stringify({version:CONTENT_VERSION+1,activities:{}})),emptyProgress());
   assert.deepEqual(parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:[]})),emptyProgress());
   assert.doesNotThrow(()=>parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{a:null,b:42,c:{answers:{x:3},first:{points:99,total:1}}}})));
+});
+test('new entries have the current activity revision without a completed milestone', () => {
+  const progress=emptyProgress();
+  assert.equal(entryFor(progress,'story-11').contentRevision,2);
+  assert.equal(entryFor(progress,'story-12').contentRevision,1);
+  assert.equal(entryFor(progress,'story-11').completed,false);
+  assert.equal(entryFor(progress,'story-11').submittedNonempty,false);
+  assert.equal(entryFor(progress,'story-11').contentUpdated,false);
+});
+test('legacy full checks remain completed while an explicit partial state stays incomplete', () => {
+  const score={points:0.5,total:1,percent:50};
+  const saved=parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{
+    legacy:{answers:{test:'hablo'},first:score},
+    partial:{answers:{},first:{points:0,total:1},completed:false},
+    invalid:{answers:{},first:{points:9,total:1}},
+    untouched:{answers:{test:'habló'}}
+  }}));
+  assert.equal(saved.activities.legacy.completed,true);
+  assert.equal(saved.activities.legacy.submittedNonempty,true);
+  assert.equal(saved.activities.partial.completed,false);
+  assert.equal(saved.activities.invalid.completed,false);
+  assert.equal(saved.activities.untouched.completed,false);
+});
+test('the corrected kitchen gap migrates once without erasing other answers or activities', () => {
+  const score={points:12,total:12,percent:100};
+  const oldEntry={answers:{s11g1:'pasaba',s11g2:'era',s11g3:'había'},self:{},first:score,best:score,latest:score,attempts:3,checked:true,dirty:true,revealed:true,everRevealed:true};
+  const otherEntry={answers:{s12g1:'esperaba'},self:{},first:{points:8,total:12},attempts:2,checked:true};
+  const saved=parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{'story-11':oldEntry,'story-12':otherEntry}}));
+  const corrected=saved.activities['story-11'];
+  assert.deepEqual(corrected.answers,{s11g1:'pasaba',s11g3:'había'});
+  assert.equal(corrected.contentRevision,2); assert.equal(corrected.contentUpdated,true);
+  for(const field of ['first','best','latest']) assert.equal(corrected[field],null);
+  for(const flag of ['checked','dirty','revealed','everRevealed','completed','submittedNonempty']) assert.equal(corrected[flag],false);
+  assert.equal(corrected.attempts,0);
+  assert.deepEqual(saved.activities['story-12'].answers,otherEntry.answers);
+  assert.equal(saved.activities['story-12'].first.points,8); assert.equal(saved.activities['story-12'].attempts,2); assert.equal(saved.activities['story-12'].completed,true);
+  assert.deepEqual(parseProgress(JSON.stringify(saved)),saved);
+  corrected.answers.s11g2='estaba';
+  const correctedAttempt=recordAttempt(corrected,{complete:false,points:1,total:12,percent:8.3});
+  assert.equal(correctedAttempt.contentUpdated,false); assert.equal(correctedAttempt.completed,false);
+  const reloaded=parseProgress(JSON.stringify({version:CONTENT_VERSION,activities:{'story-11':correctedAttempt}})).activities['story-11'];
+  assert.equal(reloaded.answers.s11g2,'estaba'); assert.equal(reloaded.first.points,1); assert.equal(reloaded.attempts,1); assert.equal(reloaded.contentUpdated,false);
 });
 test('writing self-assessment is explicit and does not grade word order', () => {
   const items=exercises.find(e=>e.kind==='writing').items;

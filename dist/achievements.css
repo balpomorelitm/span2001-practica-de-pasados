@@ -1,0 +1,73 @@
+.accepted-readings { border-top:1px solid #dae7df; background:#f3f8f4; padding:14px 16px; border-radius:10px; margin-top:14px; }
+.accepted-readings h3 { font-size:.86rem; font-weight:650; letter-spacing:0; color:#024638; margin-bottom:7px; }
+.accepted-readings p { font-size:.9rem; line-height:1.75; margin-top:7px; }
+.feedback-card.empty { border-left-color:#b7765f; }
+.feedback-card.empty .feedback-status { color:#9d5545; }
+.unanswered-label { font:600 .9rem/1.5 var(--sans); color:#9d5545; }
+.content-update { margin-top:0; }
+.achievement-collection { margin-block:32px 42px; }
+.achievement-count { padding:7px 13px; border-radius:99px; background:#dceee1; color:#024638; font-size:.85rem; font-weight:650; white-space:nowrap; }
+.course-completion { background:white; border:1px solid var(--line); border-radius:17px; padding:21px 23px; margin-bottom:20px; }
+.course-completion>div { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.9rem; }
+.course-completion>div span { color:#4b685a; font-variant-numeric:tabular-nums; }
+.course-completion progress { display:block; appearance:none; width:100%; height:11px; border:0; border-radius:99px; overflow:hidden; margin:14px 0 12px; background:#e2ece6; accent-color:#024638; }
+.course-completion progress::-webkit-progress-bar { background:#e2ece6; border-radius:99px; }
+.course-completion progress::-webkit-progress-value { background:#167254; border-radius:99px; }
+.course-completion progress::-moz-progress-bar { background:#167254; border-radius:99px; }
+.course-completion p { font-size:.875rem; line-height:1.75; max-width:850px; }
+.achievement-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:15px; }
+.achievement-card { min-width:0; display:flex; flex-direction:column; align-items:center; text-align:center; background:#fff; border:1px solid #d9e5dd; border-radius:18px; padding:16px 16px 19px; position:relative; }
+.achievement-card>img { display:block; width:104px; height:104px; object-fit:contain; margin-bottom:5px; transition:transform .2s; }
+.achievement-card.earned { border-color:#a8cdb8; background:linear-gradient(155deg,#fff 60%,#eff8f0); }
+.achievement-card.earned:hover>img { transform:translateY(-4px) rotate(-3deg); }
+.achievement-card.locked>img { filter:grayscale(.85); opacity:.36; }
+.achievement-card-content { width:100%; display:flex; align-items:center; flex-direction:column; flex:1; }
+.achievement-state { font-size:.69rem; font-weight:650; color:#61736b; border:1px solid #e1e8e3; border-radius:99px; padding:3px 9px; margin-bottom:9px; }
+.earned .achievement-state { background:#e3f1e7; border-color:#cee4d5; color:#024638; }
+.achievement-card h3 { font-size:.92rem; line-height:1.4; letter-spacing:-.01em; margin-bottom:8px; }
+.achievement-card p { font-size:.875rem; line-height:1.65; margin-bottom:13px; }
+.achievement-step { display:block; font-size:.74rem; font-weight:650; color:#526b5e; margin-top:auto; font-variant-numeric:tabular-nums; }
+.final-achievement { grid-column:span 4; flex-direction:row; gap:22px; text-align:left; padding:24px 28px; }
+.final-achievement>img { width:130px; height:130px; margin:0; }
+.final-achievement .achievement-card-content { align-items:flex-start; }
+.final-achievement h3 { font-size:1.25rem; }
+.final-achievement p { font-size:.87rem; max-width:700px; }
+.final-achievement.earned { border-color:#d6b456; background:linear-gradient(125deg,#fffdf3,#f8f1cf); box-shadow:0 5px 20px #c2aa3c12; }
+.achievement-toast { position:fixed; bottom:23px; right:24px; z-index:100; display:flex; align-items:center; gap:12px; width:min(425px,calc(100vw - 32px)); padding:19px 47px 19px 13px; border:1px solid #c6a957; border-radius:18px; background:#fffdf5; box-shadow:0 10px 40px #02463825; animation:medal-arrive .35s ease-out; }
+.achievement-toast>img { width:82px; height:82px; object-fit:contain; flex-shrink:0; }
+.achievement-toast>div { min-width:0; }
+.achievement-toast-label { display:block; color:#7a6230; font-size:.7rem; margin-bottom:4px; }
+.achievement-toast strong { display:block; font-size:.95rem; color:#024638; line-height:1.4; }
+.achievement-toast p { font-size:.73rem; line-height:1.55; margin-top:6px; }
+.achievement-toast a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; text-underline-offset:3px; color:#024638; font-size:.875rem; margin-top:4px; padding-block:4px; }
+.achievement-toast>button { position:absolute; right:3px; top:3px; border:0; background:transparent; color:#52685c; width:44px; height:44px; display:grid; place-items:center; border-radius:8px; }
+.achievement-toast>button:hover { background:#eee9d7; }
+@keyframes medal-arrive { from { transform:translateY(18px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@media(max-width:1200px) {
+ .achievement-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+ .final-achievement { grid-column:span 3; }
+}
+@media(max-width:650px) {
+ .achievement-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+ .achievement-card { padding:15px 12px; border-radius:14px; }
+ .achievement-card>img { width:87px; height:87px; }
+ .achievement-card h3 { font-size:.95rem; }
+ .achievement-card p { font-size:.875rem; }
+ .final-achievement { grid-column:span 2; flex-direction:column; text-align:center; gap:7px; padding:21px; }
+ .final-achievement>img { width:120px; height:120px; }
+ .final-achievement .achievement-card-content { align-items:center; }
+ .final-achievement h3 { font-size:1.15rem; }
+ .final-achievement p { font-size:.81rem; }
+ .course-completion { padding:19px; }
+ .course-completion>div { font-size:.86rem; }
+ .achievement-count { display:inline-block; margin-top:10px; }
+ .achievement-toast { bottom:15px; right:16px; gap:7px; padding:16px 45px 16px 8px; }
+ .achievement-toast>img { width:68px; height:68px; }
+ .achievement-toast strong { font-size:.88rem; }
+ .accepted-readings { padding:12px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .achievement-toast { animation:none; }
+ .achievement-card>img { transition:none; }
+ .achievement-card.earned:hover>img { transform:none; }
+}

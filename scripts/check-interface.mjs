@@ -12,11 +12,19 @@ import { guideSections } from '../dist/content/guide.js';
 const main = { innerHTML:'', focus(){} };
 const windowEvents = new Map();
 const documentEvents = new Map();
+const domNodes = new Map([
+ ['#main', main],
+ ['#announcer', { textContent:'' }],
+ ['#answer-feedback', { focus(){}, scrollIntoView(){} }],
+ ['#answer-form', { after(node){domNodes.set('.edited-notice',node);} }]
+]);
+let savedProgress=null;
 globalThis.scrollY=0;
 globalThis.location={hash:'#/'};
-globalThis.localStorage={getItem:()=>null,setItem(){}};
+globalThis.localStorage={getItem:()=>savedProgress,setItem(key,value){savedProgress=value;}};
+globalThis.matchMedia=()=>({matches:true});
 globalThis.window={scrollTo(){},addEventListener:(name,handler)=>windowEvents.set(name,handler)};
-globalThis.document={title:'',querySelector:selector=>selector==='#main'?main:null,querySelectorAll:()=>[],addEventListener:(name,handler)=>{
+globalThis.document={title:'',querySelector:selector=>domNodes.get(selector)||null,querySelectorAll:()=>[],createElement:()=>({}),addEventListener:(name,handler)=>{
  const handlers=documentEvents.get(name)||[]; handlers.push(handler); documentEvents.set(name,handlers);
 }};
 await import('../dist/app.js');
@@ -47,6 +55,74 @@ for(const route of routes){
   assert.ok(routes.includes(link[1]),`${route}: unknown route ${link[1]}`);
  }
 }
+
+// Check through the application's real input and submit handlers. A learner
+// can submit one verb, see all unanswered gaps marked incorrect, and improve
+// the review score without replacing the first score or completing a partial.
+function openRoute(route){
+ location.hash=route;
+ windowEvents.get('hashchange')();
+}
+function typeAnswer(id,value){
+ const input={dataset:{answer:id},value,removeAttribute(){},closest(selector){return selector==='[data-answer]'?this:null;}};
+ for(const handler of documentEvents.get('input')||[])handler({target:input});
+}
+function checkAnswers(){
+ let prevented=false;
+ for(const handler of documentEvents.get('submit')||[])handler({target:{id:'answer-form'},preventDefault(){prevented=true;}});
+ assert.equal(prevented,true,'Answer checks must use the form handler');
+ return JSON.parse(savedProgress);
+}
+const train=stories.find(story=>story.id==='story-12');
+openRoute('#/stories/'+train.id);
+typeAnswer('s12g3','tenía');
+let stored=checkAnswers();
+let trainState=stored.activities[train.id];
+assert.equal(trainState.first.points,1,'Checking one valid answer must score it immediately');
+assert.equal(trainState.first.total,12,'Unanswered gaps must remain in the denominator');
+assert.equal(trainState.best.points,1);
+assert.equal(trainState.completed,false,'A partial check is not a completed activity');
+assert.equal(trainState.submittedNonempty,true);
+assert.deepEqual(stored.achievementNotified,['first-check'],'The partial answer earns only the first-submission medal');
+assert.equal([...main.innerHTML.matchAll(/class="feedback-card empty"/g)].length,11,'Every blank needs its own incorrect feedback');
+assert.equal([...main.innerHTML.matchAll(/aria-invalid="true"/g)].length,11,'Unanswered verb fields must expose their invalid state');
+assert.match(main.innerHTML,/Not answered · incorrect/,'Blank answers must be labelled incorrect');
+assert.match(main.innerHTML,/No answer: this counts as incorrect \(0 points\)/,'Blank feedback must explain the zero');
+const thirdFeedback=main.innerHTML.match(/<article class="feedback-card correct" id="feedback-s12g3">([\s\S]*?)<\/article>/)?.[1];
+assert.ok(thirdFeedback,'The submitted alternative needs its own correct feedback');
+assert.match(thirdFeedback,/<section class="accepted-readings" aria-label="Other valid readings">/,'Other readings must be an expanded section');
+assert.match(thirdFeedback,/<b lang="es">tuvo<\/b>/,'The other reading must remain visible beside the selected form');
+assert.doesNotMatch(thirdFeedback,/<details\b|<summary\b|\shidden(?:[=>\s])/,'Accepted readings must not be collapsed or hidden');
+assert.match(domNodes.get('#announcer').textContent,/Checked: 1 out of 12/,'The partial score must be announced accessibly');
+gatherAssets(main.innerHTML);
+for(const gap of train.gaps)typeAnswer(gap.id,gap.id==='s12g3'?'tenía':gap.answers[0].form);
+stored=checkAnswers(); trainState=stored.activities[train.id];
+assert.equal(trainState.first.points,1,'Review must preserve the first partial score');
+assert.equal(trainState.best.points,12,'The best review score must improve');
+assert.equal(trainState.latest.points,12);
+assert.equal(trainState.attempts,2);
+assert.equal(trainState.completed,true,'The fully answered check now completes the activity');
+assert.ok(stored.achievementNotified.includes('first-complete'));
+assert.ok(stored.achievementNotified.includes('first-story'));
+assert.ok(stored.achievementNotified.includes('first-perfect'));
+assert.doesNotMatch(main.innerHTML,/<details\b[^>]*>[\s\S]*?Other valid reading/,'Other readings must not be inside any disclosure');
+
+const emptyStory=stories[0];
+openRoute('#/stories/'+emptyStory.id);
+stored=checkAnswers();
+assert.equal(stored.activities[emptyStory.id].first.points,0,'An entirely blank check is still scored');
+assert.equal(stored.activities[emptyStory.id].first.total,8);
+assert.equal(stored.activities[emptyStory.id].completed,false);
+assert.equal(stored.activities[emptyStory.id].submittedNonempty,false);
+assert.equal([...main.innerHTML.matchAll(/class="feedback-card empty"/g)].length,8);
+
+openRoute('#/progress');
+assert.equal([...main.innerHTML.matchAll(/<article class="achievement-card /g)].length,20,'Progress needs all 20 medal cards');
+const badgeSources=[...main.innerHTML.matchAll(/<img\b[^>]*src="(\.\/assets\/achievements\/badge\d{2}\.png)"/g)].map(match=>match[1]);
+assert.deepEqual(badgeSources,Array.from({length:20},(_,index)=>`./assets/achievements/badge${String(index+1).padStart(2,'0')}.png`));
+assert.match(main.innerHTML,/Listo para la prueba de progreso 2/,'The final medal must have the requested title');
+assert.match(main.innerHTML,/<progress value="1" max="25"/,'A full story plus a blank check completes only one main activity');
+gatherAssets(main.innerHTML);
 
 // Exercise both states through the application's event handler. Route rendering
 // alone only sees the initial state, so missing alternative images go unnoticed.
@@ -116,4 +192,4 @@ for(const asset of assets){
   assert.ok(valid,`Invalid ${extension} signature: ${asset}`);
  }
 }
-console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; all eight diagram states respond, including six generated guide images and the original calendar. Visual browser review is a separate check.`);
+console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; partial/blank submission, visible alternatives, score history and 20 medal cards verified; all eight diagram states respond, including six generated guide images and the original calendar. Visual browser review is a separate check.`);

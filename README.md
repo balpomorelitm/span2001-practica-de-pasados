@@ -29,7 +29,11 @@ Es necesario servir la carpeta mediante HTTP: abrir `dist/index.html` directamen
 
 Una respuesta correcta vale 1 punto; un error exclusivamente de tilde vale 0,5. Mayúsculas, espacios y Unicode equivalente no causan errores. Se mantiene la diferencia entre ñ y n, y entre ü y u. Cada alternativa válida se declara y explica de forma individual: no se acepta automáticamente «el otro tiempo».
 
-Una primera comprobación requiere completar todas las respuestas de la actividad. La primera nota permanece; los siguientes intentos se muestran como revisión. Las soluciones se desbloquean tras la primera comprobación y nunca sobrescriben esa nota. Los retos opcionales tienen su propio registro.
+Se puede comprobar cualquier número de respuestas, incluso ninguna. Los huecos vacíos cuentan como errores de 0 puntos y reciben su explicación; la nota siempre usa el total de la actividad. La primera nota permanece; los siguientes intentos se muestran como revisión. Las soluciones se desbloquean tras la primera comprobación y nunca sobrescriben esa nota. Los retos opcionales tienen su propio registro. Todas las lecturas alternativas admitidas aparecen visibles en el feedback, sin desplegables.
+
+El progreso distingue una comprobación parcial de una actividad completada: para completar una actividad automática hay que responder todos los huecos y comprobarlos. La escritura se completa al escribir las seis frases y compararlas con los modelos; su puntuación sigue siendo autoevaluada. Una actividad ya completada conserva ese reconocimiento al revisar después las respuestas.
+
+Veinte medallas se desbloquean mediante avisos y se reúnen en «Progress». Premian primeras actividades, grupos de historias, comparación de modelos, revisiones con 100% y retos opcionales. El porcentaje principal corresponde a los diez bloques y quince historias; exactitud y retos opcionales se muestran aparte. Al completar esas 25 actividades se obtiene **Listo para la prueba de progreso 2**. Las medallas indican práctica completada, no una calificación de dominio.
 
 Las frases completas no se comparan con una cadena exacta ni se envían a una IA. El alumno compara modelos y variantes y se asigna un punto por forma y otro por perspectiva. La nota se identifica como **Self-assessed score**. Editar una frase elimina su autoevaluación anterior.
 
@@ -41,14 +45,16 @@ El navegador guarda las respuestas y notas en `localStorage`, bajo `perspectiva.
 - `dist/content/exercises.js`: bloques, modelos de escritura y respuestas.
 - `dist/content/stories.js`: relatos, glosas, ampliaciones y fuentes históricas.
 - `dist/engine.js`: corrección y puntuación independientes del navegador.
+- `dist/achievements.js` y `dist/achievements.css`: criterios, cálculo y presentación de las veinte medallas.
 - `dist/app.js`, `dist/styles.css`, `dist/institutional.css`, `dist/visuals.js`: interacción, interfaz y diagramas de la guía.
 - `dist/assets/illustrations/`: veintidós ilustraciones originales generadas: portada, quince relatos y seis escenas de la guía, con caricaturas didácticas y fondo blanco.
 - `assets/source-illustrations/` y `assets/illustration-prompts.json`: láminas originales, prompts y correspondencia de recortes.
+- `dist/assets/achievements/`: veinte medallas PNG con transparencia alfa real, extraídas de una sola lámina generada. `assets/achievement-prompts.json` conserva el prompt; `scripts/crop-achievements.ps1` repite los recortes.
 - `dist/assets/branding/hku-logo.jpg`: identidad original de HKU, sin redibujar. Fuente: https://www.hku.hk/en/about-hku/university-identity/basic-specifications .
 
 Identidad de la interfaz: SPAN2001, Departamento de Español de la Universidad de Hong Kong. Elaborado por Pablo Torrado. Enlace del programa: https://spanish.hku.hk/ . Verde principal HKU: `#024638`.
 
-Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Cada forma aceptada incluye su tiempo y su explicación. Al cambiar en el futuro el contenido de una actividad puntuada, se debe incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento para evitar mezclar notas antiguas con preguntas nuevas.
+Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Cada forma aceptada incluye su tiempo y su explicación. Los cambios que invaliden notas anteriores requieren una migración: `contentRevisions` en `engine.js` permite renovar una actividad conservando las demás. La revisión 2 de «La receta de la abuela» elimina únicamente la respuesta de la cocina y renueva su nota para practicar «Su cocina estaba en el centro de la casa»; conserva sus otras respuestas y el resto del progreso. Para cambios globales incompatibles se puede incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento.
 
 ## Verificación
 
@@ -58,9 +64,9 @@ npm run check
 npm run check:ui
 ```
 
-Las pruebas verifican normalización, crédito parcial, ñ, alternativas, diagnósticos, formas compuestas, intentos incompletos, conservación de la primera nota, revisión, persistencia y autoevaluación. El validador comprueba conteos, extensiones, enlaces a capítulos, IDs, correspondencia de huecos, glosas y cobertura individual de feedback.
+Las pruebas verifican normalización, crédito parcial, ñ, alternativas, diagnósticos, formas compuestas, intentos incompletos y vacíos, conservación de la primera nota, revisión, migraciones, persistencia, autoevaluación y los veinte criterios de medallas. El validador comprueba conteos, extensiones, enlaces a capítulos, IDs, correspondencia de huecos, glosas y cobertura individual de feedback.
 
-`check:ui` renderiza las 43 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los ocho estados de los cuatro diagramas interactivos. Las veintidós ilustraciones web ocupan aproximadamente 2,39 MB en total. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; la lámina de la guía se editó para dar margen a los recortes. El script `scripts/crop-illustrations.ps1` permite repetir todos los recortes desde las láminas guardadas.
+`check:ui` renderiza las 43 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los ocho estados de los cuatro diagramas interactivos. También simula las comprobaciones parciales y vacías, la revisión completa posterior, la conservación de notas y las alternativas visibles; verifica las veinte medallas en progreso. Las veintidós ilustraciones web ocupan aproximadamente 2,39 MB en total. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; la lámina de la guía se editó para dar margen a los recortes. El script `scripts/crop-illustrations.ps1` permite repetir todos los recortes desde las láminas guardadas.
 
 La validación de plantillas y de interacciones simuladas no sustituye una inspección visual en móvil y escritorio. Todas las imágenes finales se han inspeccionado para revisar el estilo, los objetos y los márgenes de recorte.
 
