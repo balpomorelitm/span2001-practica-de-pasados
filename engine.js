@@ -2,6 +2,8 @@
 export const CONTENT_VERSION = 1;
 export const STORAGE_KEY = 'perspectiva.progress.v1';
 export const tenseNames = { imperfect: 'Imperfecto', preterite: 'Indefinido', present: 'Presente', perfect: 'Pretérito perfecto', imperative: 'Imperativo afirmativo' };
+const contentRevisions = { 'story-11': 2 };
+function contentRevisionFor(id) { return Object.hasOwn(contentRevisions, id) ? contentRevisions[id] : 1; }
 
 export function normalize(value) {
   return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('es');
@@ -11,7 +13,7 @@ function withoutAcute(value) {
 }
 export function gradeGap(gap, value) {
   const input = normalize(value);
-  if (!input) return { status: 'empty', points: 0, label: 'Not answered', feedback: 'Complete this answer before checking.', answer: gap.answers[0] };
+  if (!input) return { status: 'empty', points: 0, label: 'Not answered · incorrect', feedback: `No answer: this counts as incorrect (0 points). The expected answer is ${gap.answers[0].form}. ${gap.answers[0].feedback}`, answer: gap.answers[0] };
   const exact = gap.answers.find(answer => normalize(answer.form) === input);
   if (exact) return { status: 'correct', points: 1, label: gap.answers.length > 1 ? 'Correct · a valid reading' : 'Correct', feedback: exact.feedback, answer: exact };
   const accent = !gap.options && gap.answers.find(answer => withoutAcute(normalize(answer.form)) === withoutAcute(input));
@@ -44,19 +46,33 @@ export function parseProgress(raw) {
         else if (score) entry[field] = { points: score.points, total: score.total, percent: Math.round(score.points / score.total * 1000) / 10 };
       }
       entry.attempts = Number.isSafeInteger(entry.attempts) && entry.attempts >= 0 ? entry.attempts : 0;
-      for (const flag of ['checked','dirty','revealed','everRevealed']) entry[flag] = entry[flag] === true;
+      // Earlier versions only recorded a score after every gap was answered.
+      // An explicit false now distinguishes a partial check from that legacy state.
+      entry.completed = Object.hasOwn(entry, 'completed') ? entry.completed === true : Boolean(entry.first);
+      entry.submittedNonempty = Object.hasOwn(entry, 'submittedNonempty') ? entry.submittedNonempty === true : Boolean(entry.first) && (entry.completed || Object.values(entry.answers).some(normalize));
+      for (const flag of ['checked','dirty','revealed','everRevealed','contentUpdated']) entry[flag] = entry[flag] === true;
+      const previousRevision = Number.isSafeInteger(entry.contentRevision) && entry.contentRevision > 0 ? entry.contentRevision : 1;
+      if (id === 'story-11' && previousRevision < contentRevisionFor(id)) {
+        // This gap now asks for physical location (estar), replacing the old ser cue.
+        // Keep the learner's other work, but remove credit earned against that cue.
+        delete entry.answers.s11g2;
+        for (const field of ['first', 'best', 'latest']) entry[field] = null;
+        entry.attempts = 0;
+        for (const flag of ['checked','dirty','revealed','everRevealed','completed','submittedNonempty']) entry[flag] = false;
+        entry.contentUpdated = true;
+      }
+      entry.contentRevision = contentRevisionFor(id);
     }
     return saved;
   } catch { return emptyProgress(); }
 }
 export function entryFor(progress, id) {
-  if (!Object.hasOwn(progress.activities, id)) progress.activities[id] = { answers: {}, self: {}, first: null, best: null, latest: null, revealed: false, attempts: 0 };
+  if (!Object.hasOwn(progress.activities, id)) progress.activities[id] = { answers: {}, self: {}, first: null, best: null, latest: null, revealed: false, attempts: 0, completed: false, submittedNonempty: false, contentRevision: contentRevisionFor(id), contentUpdated: false };
   return progress.activities[id];
 }
 export function recordAttempt(previous, grade) {
-  if (!grade.complete) return previous;
   const score = { points: grade.points, total: grade.total, percent: grade.percent };
-  return { ...previous, first: previous.first || score, best: !previous.best || score.points > previous.best.points ? score : previous.best, latest: score, attempts: (previous.attempts || 0) + 1, checked: true };
+  return { ...previous, first: previous.first || score, best: !previous.best || score.points > previous.best.points ? score : previous.best, latest: score, attempts: (previous.attempts || 0) + 1, checked: true, completed: previous.completed === true || grade.complete === true, submittedNonempty: previous.submittedNonempty === true || grade.complete === true || Object.values(grade.results || {}).some(result => result.status !== 'empty'), contentUpdated: false };
 }
 export function assessWriting(items, self) {
   const total = items.length * 2;
