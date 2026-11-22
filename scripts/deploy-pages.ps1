@@ -112,11 +112,11 @@ try {
         $taskBuildResult = Get-OptionalNativeResult -Program 'gh' -Arguments @('api', "repos/$taskRepository/pages/builds/latest")
         if ($taskBuildResult.ExitCode -eq 0) {
             $taskBuild = $taskBuildResult.Output | ConvertFrom-Json
-            if ($taskBuild.status -eq 'built') {
+            if ($taskBuild.commit -eq $taskPagesCommit.Trim() -and $taskBuild.status -eq 'built') {
                 Write-Output "Pages build completed: $taskUrl"
                 return
             }
-            if ($taskBuild.status -eq 'errored') {
+            if ($taskBuild.commit -eq $taskPagesCommit.Trim() -and $taskBuild.status -eq 'errored') {
                 throw "GitHub Pages build failed: $($taskBuild.error.message)"
             }
         }

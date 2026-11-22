@@ -1,5 +1,13 @@
 /* Generated illustrations for the first three interactive guide comparisons.
    The existing calendar comparison is deliberately left unchanged. */
+.guide-main .guide-block > p,
+.guide-main .article-lead,
+.guide-main .diagram-explanation,
+.guide-main .example > span:last-child,
+.guide-main .teaching-tip p {
+  font-size: 1rem;
+  line-height: 1.75;
+}
 .diagram-art:has(.guide-illustration-panel) {
   width: 100%;
   max-width: 360px;
