@@ -1,6 +1,6 @@
 # SPAN2001 · Práctica de pasados
 
-Recurso de práctica B1: guía visual de ocho capítulos, diez bloques de ejercicios y quince historias originales. Interfaz y ayuda en inglés; textos, estímulos y ejemplos en español. Variedad de referencia: España.
+Recurso de práctica B1: guía visual de diez capítulos, catorce bloques de ejercicios y veintiuna historias originales. Interfaz y ayuda en inglés; textos, estímulos y ejemplos en español. Variedad de referencia: España.
 
 ## Abrir la versión local
 
@@ -18,12 +18,20 @@ Es necesario servir la carpeta mediante HTTP: abrir `dist/index.html` directamen
 
 ## Qué incluye
 
-- Guía de perspectiva, escenas, duración, descripción, hábitos, narración, cambios de significado y conjugaciones; cuatro diagramas interactivos.
-- Nueve bloques con 80 respuestas automáticas y un bloque con seis frases de autoevaluación guiada.
-- Quince relatos graduados: cinco de 70–100 palabras y ocho huecos; cinco de 100–140 y diez huecos; cinco de 140–180 y doce huecos. Total: 150 huecos principales.
-- Diez respuestas adicionales opcionales, separadas de la nota de los relatos. Practican presente, perfecto compuesto, imperativos afirmativos y una perífrasis de futuro.
+- Guía de perspectiva, escenas, duración, descripción, hábitos, narración, cambios de significado, conjugaciones, conectores y estar + gerundio; cuatro diagramas interactivos.
+- Trece bloques con 124 respuestas automáticas y un bloque con seis frases de autoevaluación guiada.
+- Veintiún relatos graduados: cinco de 70–100 palabras y ocho huecos; cinco de 100–140 y diez huecos; once de 140–180 y doce huecos. Total: 222 huecos principales.
+- Veintidós respuestas adicionales opcionales, separadas de la nota de los relatos. Practican presente, perfecto compuesto, imperativos afirmativos, una perífrasis de futuro y marcadores narrativos.
 - Feedback contextual para cada respuesta y para cada lectura alternativa autorizada.
 - Glosas en inglés mediante ratón, enfoque de teclado o toque; Escape permite cerrarlas. Diseño adaptable y movimiento reducido.
+
+## Correspondencia con las unidades 8, 9 y 10
+
+La ampliación del 23 de noviembre de 2026 se basa en la revisión directa de los resúmenes 116–117, 130–131 y 144–145 de Aula Internacional Plus 2. Los textos, explicaciones, ejercicios e ilustraciones de esta web son originales; las páginas del libro no se publican ni se copian al proyecto.
+
+Se han adaptado ocho relatos y añadido seis. Los cuatro bloques nuevos trabajan conectores dentro del discurso; épocas, cambios y continuidad; estar + gerundio en imperfecto e indefinido; y consejos y reacciones. La guía añade dos capítulos y amplía la referencia del imperativo, doler y los irregulares de indefinido. El contraste entre los dos pasados sigue siendo el objetivo central.
+
+La matriz de objetivos y la revisión pedagógica están en [docs/unit-alignment.md](docs/unit-alignment.md). Incluye las fuentes institucionales de los relatos de 1933 y 1989 y los criterios para aceptar alternativas sin convertir los marcadores en reglas automáticas de tiempo verbal.
 
 ## Corrección y progreso
 
@@ -33,7 +41,7 @@ Se puede comprobar cualquier número de respuestas, incluso ninguna. Los huecos 
 
 El progreso distingue una comprobación parcial de una actividad completada: para completar una actividad automática hay que responder todos los huecos y comprobarlos. La escritura se completa al escribir las seis frases y compararlas con los modelos; su puntuación sigue siendo autoevaluada. Una actividad ya completada conserva ese reconocimiento al revisar después las respuestas.
 
-Veinte medallas se desbloquean mediante avisos y se reúnen en «Progress». Premian primeras actividades, grupos de historias, comparación de modelos, revisiones con 100% y retos opcionales. El porcentaje principal corresponde a los diez bloques y quince historias; exactitud y retos opcionales se muestran aparte. Al completar esas 25 actividades se obtiene **Listo para la prueba de progreso 2**. Las medallas indican práctica completada, no una calificación de dominio.
+Veinte medallas se desbloquean mediante avisos y se reúnen en «Progress». Premian primeras actividades, grupos de historias, comparación de modelos, revisiones con 100% y retos opcionales. El porcentaje principal corresponde a los catorce bloques y veintiuna historias; exactitud y retos opcionales se muestran aparte. Al completar esas 35 actividades se obtiene **Listo para la prueba de progreso 2**. Los denominadores y objetivos de colección se calculan a partir del contenido actual. Las medallas indican práctica completada, no una calificación de dominio.
 
 Las frases completas no se comparan con una cadena exacta ni se envían a una IA. El alumno compara modelos y variantes y se asigna un punto por forma y otro por perspectiva. La nota se identifica como **Self-assessed score**. Editar una frase elimina su autoevaluación anterior.
 
@@ -44,17 +52,19 @@ El navegador guarda las respuestas y notas en `localStorage`, bajo `perspectiva.
 - `dist/content/guide.js`: explicaciones, tablas y enlaces a la práctica.
 - `dist/content/exercises.js`: bloques, modelos de escritura y respuestas.
 - `dist/content/stories.js`: relatos, glosas, ampliaciones y fuentes históricas.
+- `dist/content/unit-stories.js`, `unit-exercises.js` y `unit-guide.js`: contenido original de la ampliación de unidades 8–10, importado desde las tres colecciones principales.
 - `dist/engine.js`: corrección y puntuación independientes del navegador.
 - `dist/achievements.js` y `dist/achievements.css`: criterios, cálculo y presentación de las veinte medallas.
 - `dist/app.js`, `dist/styles.css`, `dist/institutional.css`, `dist/visuals.js`: interacción, interfaz y diagramas de la guía.
-- `dist/assets/illustrations/`: veintidós ilustraciones originales generadas: portada, quince relatos y seis escenas de la guía, con caricaturas didácticas y fondo blanco.
+- `dist/assets/illustrations/`: veintiocho ilustraciones originales generadas: portada, veintiún relatos y seis escenas de la guía, con caricaturas didácticas y fondo blanco.
 - `assets/source-illustrations/` y `assets/illustration-prompts.json`: láminas originales, prompts y correspondencia de recortes.
+- `assets/unit-illustration-prompts.json` y `scripts/crop-unit-illustrations.ps1`: generación, edición y recortes de las seis ilustraciones nuevas, guardadas junto a las anteriores.
 - `dist/assets/achievements/`: veinte medallas PNG con transparencia alfa real, extraídas de una sola lámina generada. `assets/achievement-prompts.json` conserva el prompt; `scripts/crop-achievements.ps1` repite los recortes.
 - `dist/assets/branding/hku-logo.jpg`: identidad original de HKU, sin redibujar. Fuente: https://www.hku.hk/en/about-hku/university-identity/basic-specifications .
 
 Identidad de la interfaz: SPAN2001, Departamento de Español de la Universidad de Hong Kong. Elaborado por Pablo Torrado. Enlace del programa: https://spanish.hku.hk/ . Verde principal HKU: `#024638`.
 
-Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Cada forma aceptada incluye su tiempo y su explicación. Los cambios que invaliden notas anteriores requieren una migración: `contentRevisions` en `engine.js` permite renovar una actividad conservando las demás. La revisión 2 de «La receta de la abuela» elimina únicamente la respuesta de la cocina y renueva su nota para practicar «Su cocina estaba en el centro de la casa»; conserva sus otras respuestas y el resto del progreso. Para cambios globales incompatibles se puede incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento.
+Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Cada forma aceptada incluye su objetivo lingüístico y su explicación. `narrative` identifica conectores y otras expresiones, sin presentarlos como tiempos verbales. Los cambios que invaliden notas anteriores requieren una migración: `contentRevisions` y `revisedGaps` en `engine.js` renuevan solo las actividades y respuestas afectadas. La revisión de las unidades conserva las demás respuestas; reinicia la nota de las historias 02, 03, 07, 08, 10 y 15 porque cambian algunos objetivos a estar + gerundio. Las historias 06 y 13 conservan sus notas al cambiar únicamente contexto y léxico. La corrección previa de la cocina en la historia 11 mantiene su migración independiente. Un aviso pide volver a comprobar las actividades revisadas. Para cambios globales incompatibles se puede incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento.
 
 ## Verificación
 
@@ -66,7 +76,7 @@ npm run check:ui
 
 Las pruebas verifican normalización, crédito parcial, ñ, alternativas, diagnósticos, formas compuestas, intentos incompletos y vacíos, conservación de la primera nota, revisión, migraciones, persistencia, autoevaluación y los veinte criterios de medallas. El validador comprueba conteos, extensiones, enlaces a capítulos, IDs, correspondencia de huecos, glosas y cobertura individual de feedback.
 
-`check:ui` renderiza las 43 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los ocho estados de los cuatro diagramas interactivos. También simula las comprobaciones parciales y vacías, la revisión completa posterior, la conservación de notas y las alternativas visibles; verifica las veinte medallas en progreso. Las veintidós ilustraciones web ocupan aproximadamente 2,39 MB en total. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; la lámina de la guía se editó para dar margen a los recortes. El script `scripts/crop-illustrations.ps1` permite repetir todos los recortes desde las láminas guardadas.
+`check:ui` renderiza las 61 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los ocho estados de los cuatro diagramas interactivos. También simula comprobaciones parciales y vacías, conservación de notas, alternativas visibles y las interacciones de los nuevos bloques e historias; verifica las veinte medallas en progreso. Las veintiocho ilustraciones web ocupan aproximadamente 2,92 MB en total. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; la lámina de la guía se editó para dar margen a los recortes. Los scripts de recorte permiten repetir la extracción desde las láminas guardadas.
 
 La validación de plantillas y de interacciones simuladas no sustituye una inspección visual en móvil y escritorio. Todas las imágenes finales se han inspeccionado para revisar el estilo, los objetos y los márgenes de recorte.
 

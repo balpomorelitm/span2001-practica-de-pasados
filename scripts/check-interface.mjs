@@ -8,6 +8,7 @@ import { diagramArt, diagramData, heroArt, storyArt } from '../dist/visuals.js';
 import { exercises } from '../dist/content/exercises.js';
 import { stories } from '../dist/content/stories.js';
 import { guideSections } from '../dist/content/guide.js';
+import { activityGaps } from '../dist/engine.js';
 
 const main = { innerHTML:'', focus(){} };
 const windowEvents = new Map();
@@ -121,8 +122,94 @@ assert.equal([...main.innerHTML.matchAll(/<article class="achievement-card /g)].
 const badgeSources=[...main.innerHTML.matchAll(/<img\b[^>]*src="(\.\/assets\/achievements\/badge\d{2}\.png)"/g)].map(match=>match[1]);
 assert.deepEqual(badgeSources,Array.from({length:20},(_,index)=>`./assets/achievements/badge${String(index+1).padStart(2,'0')}.png`));
 assert.match(main.innerHTML,/Listo para la prueba de progreso 2/,'The final medal must have the requested title');
-assert.match(main.innerHTML,/<progress value="1" max="25"/,'A full story plus a blank check completes only one main activity');
+assert.ok(main.innerHTML.includes(`<progress value="1" max="${exercises.length + stories.length}"`),'A full story plus a blank check completes only one main activity');
 gatherAssets(main.innerHTML);
+
+// The course extension mixes radio choices with typed multiword answers.
+// Exercise the same input/submit path used above rather than rendering only
+// the fresh routes: a chosen alternative, a meaningful distractor and a later
+// full revision must retain the first score and expose every explanation.
+function answerGap(gap, form = gap.answers[0].form){
+ if(gap.options){
+  assert.ok(gap.options.includes(form),`${gap.id}: the selected expression must be offered`);
+  assert.ok(main.innerHTML.includes(`type="radio" name="${gap.id}"`),`${gap.id}: choices must be real radio controls`);
+ }
+ typeAnswer(gap.id,form);
+}
+function feedbackFor(id){
+ const card=main.innerHTML.match(new RegExp(`<article class="feedback-card [^"]+" id="feedback-${id}">([\\s\\S]*?)<\\/article>`))?.[1];
+ assert.ok(card,`${id}: individual feedback is required after checking`);
+ return card;
+}
+const newBlockIds=['story-connectors','time-and-change','progressive-past','voices-and-reactions'];
+for(const id of newBlockIds){
+ const block=exercises.find(item=>item.id===id);
+ assert.ok(block,`Missing new unit block: ${id}`);
+ const gaps=activityGaps(block);
+ openRoute('#/practice/'+id);
+ if(id==='story-connectors'){
+  answerGap(gaps.find(gap=>gap.id==='e11g10'),'Entonces');
+  answerGap(gaps.find(gap=>gap.id==='e11g4'),'poco después');
+ }else answerGap(gaps[0]);
+ stored=checkAnswers();
+ let state=stored.activities[id];
+ assert.equal(state.first.points,1,`${id}: a partial check must credit its one correct answer`);
+ assert.equal(state.first.total,gaps.length);
+ assert.equal(state.completed,false,`${id}: unfilled answers prevent completion, not checking`);
+ if(id==='story-connectors'){
+  const accepted=feedbackFor('e11g10');
+  assert.match(accepted,/at that moment|arrival/,'The chosen Entonces reading needs its explanation');
+  assert.match(accepted,/<section class="accepted-readings"/,'The other interpretation must remain visible');
+  assert.doesNotMatch(accepted,/<details\b|<summary\b|\shidden(?:[=>\s])/);
+  const rejected=feedbackFor('e11g4');
+  assert.match(rejected,/Check the meaning/,'A timing distractor needs a meaning diagnosis');
+  assert.match(rejected,/does not express the unexpected onset/,'Feedback must explain sequence versus surprise');
+  assert.ok(main.innerHTML.includes('value="Entonces" checked'),'The selected valid radio alternative must remain checked');
+ }
+ for(const gap of gaps)answerGap(gap);
+ stored=checkAnswers(); state=stored.activities[id];
+ assert.equal(state.first.points,1,`${id}: full review must preserve the partial first score`);
+ assert.equal(state.best.points,gaps.length,`${id}: all canonical answers must earn the full review score`);
+ assert.equal(state.latest.points,gaps.length);
+ assert.equal(state.completed,true);
+ assert.equal(state.attempts,2);
+ assert.equal([...main.innerHTML.matchAll(/class="feedback-card correct"/g)].length,gaps.length,`${id}: every answer needs correct feedback`);
+ gatherAssets(main.innerHTML);
+}
+
+for(const number of [16,17,18,19,20,21]){
+ const story=stories.find(item=>item.id==='story-'+number);
+ openRoute('#/stories/'+story.id);
+ answerGap(story.gaps[0]);
+ stored=checkAnswers();
+ assert.equal(stored.activities[story.id].first.points,1,`${story.id}: a single verb must be checkable`);
+ assert.equal(stored.activities[story.id].first.total,12);
+ assert.equal(stored.activities[story.id].completed,false);
+ for(const gap of story.gaps)answerGap(gap);
+ stored=checkAnswers();
+ assert.equal(stored.activities[story.id].first.points,1);
+ assert.equal(stored.activities[story.id].best.points,12);
+ assert.equal(stored.activities[story.id].completed,true);
+ assert.equal([...main.innerHTML.matchAll(/class="feedback-card correct"/g)].length,12);
+ gatherAssets(main.innerHTML);
+ openRoute('#/stories/'+story.id+'/extra');
+ answerGap(story.extra.gaps[0]);
+ stored=checkAnswers();
+ const optionalId=story.id+'-extra';
+ assert.ok(stored.activities[optionalId],`${story.id}: the optional challenge must use a separate saved entry`);
+ assert.equal(stored.activities[optionalId].first.points,1);
+ assert.equal(stored.activities[optionalId].first.total,2);
+ assert.equal(stored.activities[optionalId].completed,false);
+ assert.match(feedbackFor(story.extra.gaps[1].id),/0 points/,'An unanswered optional field must also be an explicit zero');
+ for(const gap of story.extra.gaps)answerGap(gap);
+ stored=checkAnswers();
+ assert.equal(stored.activities[optionalId].first.points,1);
+ assert.equal(stored.activities[optionalId].best.points,2);
+ assert.equal(stored.activities[optionalId].completed,true);
+ assert.equal(stored.activities[story.id].first.points,1,'The optional score must leave the main first attempt alone');
+ assert.equal(stored.activities[story.id].best.points,12,'The optional score must leave the main review score alone');
+ gatherAssets(main.innerHTML);
+}
 
 // Exercise both states through the application's event handler. Route rendering
 // alone only sees the initial state, so missing alternative images go unnoticed.
@@ -168,12 +255,12 @@ for(const [type,data] of Object.entries(diagramData)){
 assert.equal(generatedGuideAssets.size,6,'Three illustrated comparisons need six distinct image states');
 
 const storyImages=new Set();
-for(let index=0;index<15;index++){
+for(let index=0;index<stories.length;index++){
  const art=storyArt(index); gatherAssets(art);
  const source=art.match(/<img\b[^>]*src="([^"]+)"/)?.[1];
  assert.ok(source,`Story ${index+1}: illustration required`); storyImages.add(source);
 }
-assert.equal(storyImages.size,15,'Each story needs its own illustration');
+assert.equal(storyImages.size,stories.length,'Each story needs its own illustration');
 gatherAssets(heroArt());
 const heroSource=heroArt().match(/<img\b[^>]*src="([^"]+)"/)?.[1];
 assert.ok(heroSource&&!storyImages.has(heroSource),'The course cover needs a separate illustration');
@@ -192,4 +279,4 @@ for(const asset of assets){
   assert.ok(valid,`Invalid ${extension} signature: ${asset}`);
  }
 }
-console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; partial/blank submission, visible alternatives, score history and 20 medal cards verified; all eight diagram states respond, including six generated guide images and the original calendar. Visual browser review is a separate check.`);
+console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; partial/blank submission, visible alternatives, score history and 20 medal cards verified; four new unit blocks and six new stories with separate optional scores respond; all eight diagram states respond, including six generated guide images and the original calendar. Visual browser review is a separate check.`);

@@ -1,0 +1,46 @@
+{
+  "mode": "image_gen built-in generation and edit",
+  "source": "assets/source-illustrations/comic-units-8-10-source.png",
+  "final": "assets/source-illustrations/comic-units-8-10.png",
+  "prompt": "Use case: illustration-story. Create ONE contact sheet containing exactly SIX small narrative illustrations arranged in a precise 3-column by 2-row equal-cell grid, row-major order. Very generous pure WHITE gutters and white margins around every scene, no frame, no scene touches another. Asset type: six thumbnails for an adult university Spanish B1 grammar website. Coherent warm humorous educational cartoon style: lively black hand-drawn ink contours, elongated expressive noses and angular friendly faces, small stylised bodies with clear CORRECT anatomy, simple flat green/mint/ochre/orange colours, sparse pale colour patches behind scenes on a clean white background. Original characters, not copied characters. No text, letters, numbers, signage, captions, speech bubbles, logos or watermark anywhere. Each person has exactly two arms and two hands with clearly plausible poses; no duplicates or merged limbs. Scene1 top-left: a young adult hiker with a slightly sore ankle sits safely on a low rock, a friend beside them offers a water bottle; a tiny first-aid bag rests nearby, warm calm expression, no dramatic injury. Scene2 top-middle: a grandfather and granddaughter listen with fascination to an old tabletop radio in a simple living room, radio as clear central object. Scene3 top-right: two adult amateur performers on a very small stage, one holds a theatrical paper crown in one hand, the other peers behind a curtain, both amused, a simple stage lamp above. Scene4 bottom-left: a woman dressed in a modest 1930s coat and cloche hat calmly places a folded ballot into a ballot box on a polling table while another adult official sits nearby; historically plausible ordinary civilian scene, no flags and no writing. Scene5 bottom-middle: two smiling adult family members meet and hug beside a concrete border wall with a simple open passage, late 1980s clothes, convey reunion and relief; no dramatic demolition or machinery or soldiers, no text or graffiti. Scene6 bottom-right: two adult volunteers in a local history archive inspect a very old domestic sewing machine and a yellowed photograph, with a few neatly stacked document boxes behind. All six scenes must be complete, separate, similarly scaled, readable as small thumbnails. Keep all props and figures fully inside their respective cells with at least 10% white padding. Main focus human actions and emotions, minimal background detail.",
+  "edit_prompt": "Edit only the TOP-LEFT hiking illustration. Swap the roles so the young WOMAN with brown hair sits on the rock and holds her sore ankle, and the young MAN offers her the water bottle. The woman is the tired hiker needing a rest; the man is her companion helping. Keep friendly calm expressions, plausible anatomically correct two arms per person, exactly two people in this scene, same hiking props, same white gutters. Preserve all five other illustrations, the precise 3-column by 2-row contact sheet layout, the overall style and palette, the framing and white background unchanged. No text.",
+  "crop": "scripts/crop-unit-illustrations.ps1",
+  "mapping": [
+    {
+      "story": "story-16",
+      "image": "dist/assets/illustrations/story-16.jpg",
+      "row": 1,
+      "column": 1
+    },
+    {
+      "story": "story-17",
+      "image": "dist/assets/illustrations/story-17.jpg",
+      "row": 1,
+      "column": 2
+    },
+    {
+      "story": "story-18",
+      "image": "dist/assets/illustrations/story-18.jpg",
+      "row": 1,
+      "column": 3
+    },
+    {
+      "story": "story-19",
+      "image": "dist/assets/illustrations/story-19.jpg",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "story": "story-20",
+      "image": "dist/assets/illustrations/story-20.jpg",
+      "row": 2,
+      "column": 2
+    },
+    {
+      "story": "story-21",
+      "image": "dist/assets/illustrations/story-21.jpg",
+      "row": 2,
+      "column": 3
+    }
+  ]
+}

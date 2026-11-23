@@ -8,6 +8,7 @@ import { achievementDefinitions, achievementMetrics, calculateAchievements, isWr
 const writing = exercises.find(activity => activity.kind === 'writing');
 const automaticMain = [...exercises.filter(activity => activity.kind !== 'writing'), ...stories];
 const extras = stories.filter(activity => activity.extra).map(activity => ({ ...activity.extra, id: activity.id + '-extra' }));
+const courseTotal=exercises.length+stories.length;
 const badge = (progress, id) => calculateAchievements(progress).achievements.find(item => item.id === id);
 
 function checked(activity, { correct = false } = {}) {
@@ -26,12 +27,12 @@ test('the collection has 20 distinct badges and a completion-based final award',
   assert.equal(achievementDefinitions.length, 20);
   assert.equal(new Set(achievementDefinitions.map(item => item.id)).size, 20);
   assert.deepEqual(achievementDefinitions.map(item => item.asset), Array.from({ length: 20 }, (_, i) => `assets/achievements/badge${String(i + 1).padStart(2, '0')}.png`));
-  assert.equal(result.summary.mainTotal, 25);
-  assert.equal(result.summary.automaticTotal, 24);
-  assert.equal(result.summary.optionalTotal, 5);
+  assert.equal(result.summary.mainTotal, courseTotal);
+  assert.equal(result.summary.automaticTotal, automaticMain.length);
+  assert.equal(result.summary.optionalTotal, extras.length);
   assert.equal(result.summary.earnedCount, 0);
   assert.equal(result.achievements.at(-1).title, 'Listo para la prueba de progreso 2');
-  assert.equal(result.achievements.at(-1).target, 25);
+  assert.equal(result.achievements.at(-1).target, courseTotal);
   assert.ok(result.achievements.every(item => item.description && item.current === 0 && item.earned === false));
 });
 
@@ -134,15 +135,15 @@ test('persisted writing completion survives later edits to answers and model pan
   assert.equal(isWritingComplete(automaticMain[0], state), false, 'automatic activities still use their own completion rule');
 });
 
-test('all 24 automatic main activities are only 24/25 until guided writing is complete', () => {
+test('all automatic main activities still need guided writing for complete course coverage', () => {
   const progress = emptyProgress();
   for (const activity of automaticMain) progress.activities[activity.id] = checked(activity);
-  assert.equal(achievementMetrics(progress).mainCompleted, 24);
+  assert.equal(achievementMetrics(progress).mainCompleted, automaticMain.length);
   assert.equal(badge(progress, 'progress-test-ready').earned, false);
   assert.equal(badge(progress, 'all-practice').earned, false);
   progress.activities[writing.id] = completedWriting();
   const result = calculateAchievements(progress);
-  assert.equal(result.summary.mainCompleted, 25);
+  assert.equal(result.summary.mainCompleted, courseTotal);
   assert.equal(result.summary.mainPercent, 100);
   assert.equal(result.summary.optionalCompleted, 0);
   assert.equal(badge(progress, 'progress-test-ready').earned, true);
@@ -156,7 +157,7 @@ test('optional challenges have separate milestones and cannot advance main compl
   const progress = emptyProgress();
   for (const activity of extras) progress.activities[activity.id] = checked(activity, { correct: true });
   const result = calculateAchievements(progress);
-  assert.equal(result.summary.optionalCompleted, 5);
+  assert.equal(result.summary.optionalCompleted, extras.length);
   assert.equal(result.summary.mainCompleted, 0);
   assert.equal(result.summary.mainPercent, 0);
   assert.equal(result.summary.storiesCompleted, 0);
@@ -166,7 +167,7 @@ test('optional challenges have separate milestones and cannot advance main compl
   assert.equal(badge(progress, 'progress-test-ready').earned, false);
 });
 
-test('Start, Build and Stretch group awards require their own five stories', () => {
+test('Start, Build and Stretch group awards require every story in their own group', () => {
   const progress = emptyProgress();
   for (const activity of stories.filter(item => item.level === 'Build')) progress.activities[activity.id] = checked(activity);
   assert.equal(badge(progress, 'build-stories').earned, true);
@@ -215,12 +216,13 @@ test('parsed legacy scores migrate as complete while explicit partial completion
 
 test('numeric milestones use distinct completed activities rather than attempt counts', () => {
   const progress = emptyProgress();
-  const chosen = [...exercises.filter(item => item.kind !== 'writing').slice(0, 5), ...stories.slice(0, 8)];
+  const halfwayTarget = Math.ceil(courseTotal / 2);
+  const chosen = [...exercises.filter(item => item.kind !== 'writing').slice(0, 5), ...stories.slice(0, halfwayTarget - 5)];
   for (const activity of chosen) progress.activities[activity.id] = { ...checked(activity), attempts: 50 };
   assert.equal(badge(progress, 'three-complete').earned, true);
   assert.equal(badge(progress, 'five-practice').earned, true);
   assert.equal(badge(progress, 'halfway').earned, true);
-  assert.equal(achievementMetrics(progress).mainCompleted, 13);
+  assert.equal(achievementMetrics(progress).mainCompleted, halfwayTarget);
   delete progress.activities[chosen.at(-1).id];
   assert.equal(badge(progress, 'halfway').earned, false);
 });

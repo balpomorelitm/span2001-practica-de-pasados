@@ -23,7 +23,7 @@ export function heroArt() {
   return '<img class="hero-illustration" src="./assets/illustrations/course-study.jpg" alt="Three university students studying Spanish together" width="627" height="627" fetchpriority="high">';
 }
 export function storyArt(index) {
-  const number = String(((index % 15) + 15) % 15 + 1).padStart(2,'0');
+  const number = String(Math.max(0, index) + 1).padStart(2,'0');
   return `<img class="story-illustration" src="./assets/illustrations/story-${number}.jpg" alt="" width="627" height="627" loading="lazy" decoding="async">`;
 }
 export const diagramData = {

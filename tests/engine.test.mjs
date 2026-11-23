@@ -176,3 +176,8 @@ test('restoring progress derives numeric percentages instead of trusting stored 
   assert.equal(restored.activities.x.attempts,0);
   assert.equal(restored.activities.x.checked,false);
 });
+test('narrative models capitalise a quoted sentence without capitalising a marker inside a clause', () => {
+  const gaps=[{id:'marker',answers:[{form:'por entonces'}]}];
+  assert.equal(fillTokens('La narradora escribió: «{{marker}}, vivía allí».',gaps),'La narradora escribió: «Por entonces, vivía allí».');
+  assert.equal(fillTokens('Mi abuela, {{marker}}, vivía allí.',gaps),'Mi abuela, por entonces, vivía allí.');
+});

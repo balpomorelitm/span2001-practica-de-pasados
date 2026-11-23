@@ -9,6 +9,10 @@ const optionalActivities = stories.filter(activity => activity.extra).map(activi
   ...activity.extra, id: activity.id + '-extra'
 }));
 const allAutomatic = [...automaticMain, ...optionalActivities];
+const courseTotal = exercises.length + stories.length;
+const optionalTotal = optionalActivities.length;
+const storyGroupTotal = level => stories.filter(story => story.level === level).length;
+
 
 /** A closed comparison still counts: the learner may honestly award themselves zero. */
 export function isWritingComplete(activity, state = {}) {
@@ -76,24 +80,24 @@ export function achievementMetrics(progress) {
 const definitions = [
   ['first-check', 'First answer checked', 'Check at least one non-empty answer in an automatically marked activity.', 'submittedActivities', 1],
   ['first-complete', 'First activity completed', 'Answer every gap and check one main automatically marked activity. Accuracy is scored separately.', 'automaticCompleted', 1],
-  ['three-complete', 'Three activities completed', 'Complete three of the 25 main activities. The guided writing block counts when all six answers have been compared with their models.', 'mainCompleted', 3],
+  ['three-complete', 'Three activities completed', `Complete three of the ${courseTotal} main activities. The guided writing block counts when all six answers have been compared with their models.`, 'mainCompleted', 3],
   ['first-practice', 'First practice block completed', 'Complete one practice block, including all its answers. Guided writing also counts.', 'practiceCompleted', 1],
-  ['five-practice', 'Five practice blocks completed', 'Complete five of the ten practice blocks.', 'practiceCompleted', 5],
-  ['all-practice', 'Practice collection completed', 'Complete all ten practice blocks, including six written answers and their model comparisons.', 'practiceCompleted', 10],
+  ['five-practice', 'Five practice blocks completed', `Complete five of the ${exercises.length} practice blocks.`, 'practiceCompleted', 5],
+  ['all-practice', 'Practice collection completed', `Complete all ${exercises.length} practice blocks, including six written answers and their model comparisons.`, 'practiceCompleted', exercises.length],
   ['first-story', 'First story completed', 'Answer every main gap in one story and check your answers. Optional challenges have separate scores.', 'storiesCompleted', 1],
-  ['start-stories', 'Start stories completed', 'Complete all five stories in the Start group.', 'startStoriesCompleted', 5],
-  ['build-stories', 'Build stories completed', 'Complete all five stories in the Build group.', 'buildStoriesCompleted', 5],
-  ['stretch-stories', 'Stretch stories completed', 'Complete all five stories in the Stretch group. Their optional challenges are not required.', 'stretchStoriesCompleted', 5],
+  ['start-stories', 'Start stories completed', `Complete all ${storyGroupTotal('Start')} stories in the Start group.`, 'startStoriesCompleted', storyGroupTotal('Start')],
+  ['build-stories', 'Build stories completed', `Complete all ${storyGroupTotal('Build')} stories in the Build group.`, 'buildStoriesCompleted', storyGroupTotal('Build')],
+  ['stretch-stories', 'Stretch stories completed', `Complete all ${storyGroupTotal('Stretch')} stories in the Stretch group. Their optional challenges are not required.`, 'stretchStoriesCompleted', storyGroupTotal('Stretch')],
   ['five-stories', 'Five stories completed', 'Complete the main gaps in any five stories.', 'storiesCompleted', 5],
   ['ten-stories', 'Ten stories completed', 'Complete the main gaps in any ten stories.', 'storiesCompleted', 10],
-  ['all-stories', 'Story collection completed', 'Complete the main gaps in all 15 stories.', 'storiesCompleted', 15],
+  ['all-stories', 'Story collection completed', `Complete the main gaps in all ${stories.length} stories.`, 'storiesCompleted', stories.length],
   ['writing-models', 'Six writing models compared', 'Open the model comparison for all six guided writing prompts after writing your answers. Your self-assessed score remains separate.', 'writingModelsCompared', 6],
   ['first-perfect', 'First score of 100%', 'Earn 100% in one fully answered, automatically marked activity. Optional challenges also count; self-assessed writing does not.', 'perfectActivities', 1],
   ['five-perfect', 'Five scores of 100%', 'Earn 100% in five fully answered, automatically marked activities. Optional challenges also count; your best review scores count.', 'perfectActivities', 5],
   ['first-optional', 'First optional challenge completed', 'Answer both gaps and check one optional story challenge. It has its own score.', 'optionalCompleted', 1],
-  ['all-optional', 'Optional challenges completed', 'Complete all five optional story challenges. They are additional practice and do not affect the main completion percentage.', 'optionalCompleted', 5],
-  ['halfway', 'More than halfway', 'Complete at least 13 of the 25 main activities.', 'mainCompleted', 13],
-  ['progress-test-ready', 'Listo para la prueba de progreso 2', 'Complete 100% of the 25 main activities: all ten practice blocks and 15 stories. Accuracy is shown separately; optional challenges are not required.', 'mainCompleted', 25]
+  ['all-optional', 'Optional challenges completed', `Complete all ${optionalTotal} optional story challenges. They are additional practice and do not affect the main completion percentage.`, 'optionalCompleted', optionalTotal],
+  ['halfway', 'More than halfway', `Complete at least ${Math.ceil(courseTotal / 2)} of the ${courseTotal} main activities.`, 'mainCompleted', Math.ceil(courseTotal / 2)],
+  ['progress-test-ready', 'Listo para la prueba de progreso 2', `Complete 100% of the ${courseTotal} main activities: all ${exercises.length} practice blocks and ${stories.length} stories. Accuracy is shown separately; optional challenges are not required.`, 'mainCompleted', courseTotal]
 ];
 
 export const achievementDefinitions = Object.freeze(definitions.map(([id, title, description, metric, target], position) => Object.freeze({
