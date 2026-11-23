@@ -20,11 +20,11 @@ function withoutAcute(value) {
 }
 export function gradeGap(gap, value) {
   const input = normalize(value);
-  if (!input) return { status: 'empty', points: 0, label: 'Not answered · incorrect', feedback: `No answer: this counts as incorrect (0 points). The expected answer is ${gap.answers[0].form}. ${gap.answers[0].feedback}`, answer: gap.answers[0] };
+  if (!input) return { status: 'empty', points: 0, label: 'Not answered · incorrect', feedback: `No answer: this counts as incorrect (0 points). The expected answer is {es}${gap.answers[0].form}{/es}. ${gap.answers[0].feedback}`, answer: gap.answers[0] };
   const exact = gap.answers.find(answer => normalize(answer.form) === input);
   if (exact) return { status: 'correct', points: 1, label: gap.answers.length > 1 ? 'Correct · a valid reading' : 'Correct', feedback: exact.feedback, answer: exact };
   const accent = !gap.options && gap.answers.find(answer => withoutAcute(normalize(answer.form)) === withoutAcute(input));
-  if (accent) return { status: 'accent', points: 0.5, label: 'Almost · check the accent', feedback: `The expected spelling is ${accent.form}. This is an accent-only error (½ point). ${accent.feedback}`, answer: accent };
+  if (accent) return { status: 'accent', points: 0.5, label: 'Almost · check the accent', feedback: `The expected spelling is {es}${accent.form}{/es}. This is an accent-only error (½ point). ${accent.feedback}`, answer: accent };
   const known = gap.wrongAnswers?.find(answer => normalize(answer.form) === input);
   return { status: 'incorrect', points: 0, label: known ? ({ tense: 'Reconsider the tense', person: 'Check the person', form: 'Check the conjugation', meaning: 'Check the meaning' }[known.kind] || 'Try again') : 'Revisit this answer', feedback: known?.feedback || gap.answers[0].feedback, answer: gap.answers[0] };
 }

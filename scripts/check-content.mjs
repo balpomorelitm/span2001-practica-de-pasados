@@ -3,6 +3,9 @@ import { stories } from '../dist/content/stories.js';
 import { exercises } from '../dist/content/exercises.js';
 import { guideSections } from '../dist/content/guide.js';
 import { activityGaps, fillTokens } from '../dist/engine.js';
+import { diagramData } from '../dist/visuals.js';
+import { connectorReference } from '../dist/content/connector-reference.js';
+import { plainText } from '../dist/formatting.js';
 
 export function wordCount(story) {
   return fillTokens(story.text, story.gaps).replace(/\[\[([^|]+)\|[^\]]+\]\]/g, '$1').trim().split(/\s+/u).length;
@@ -20,6 +23,29 @@ export function validateContent() {
   const exerciseIds = new Set(exercises.map(item => item.id));
   const used = new Set();
   const feedbackUsed = new Set();
+  // Authoring markers are allowed only around language mentioned in English.
+  // They must never change the forms compared by the grader or Spanish texts.
+  function checkLanguageMarkup(value, label, key = '') {
+    if (typeof value === 'string' && /\{\/?es\}/.test(value)) {
+      assert(!['form','text','spanish','options','model','variants','target'].includes(key), label + ': language markers must not alter Spanish answer data.');
+      let open = false;
+      let from = 0;
+      for (const match of value.matchAll(/\{\/?es\}/g)) {
+        if (match[0] === '{es}') {
+          assert(!open, label + ': nested Spanish language marker.');
+          open = true;
+          from = match.index + match[0].length;
+        } else {
+          assert(open, label + ': unmatched closing language marker.');
+          assert(value.slice(from, match.index).trim().length > 0, label + ': empty Spanish language marker.');
+          open = false;
+        }
+      }
+      assert(!open, label + ': unclosed Spanish language marker.');
+    } else if (Array.isArray(value)) value.forEach((item, index) => checkLanguageMarkup(item, `${label}[${index}]`, key));
+    else if (value && typeof value === 'object') for (const [childKey, child] of Object.entries(value)) checkLanguageMarkup(child, label + '.' + childKey, childKey);
+  }
+  checkLanguageMarkup({ exercises, stories, guideSections, connectorReference, diagramData }, 'Content');
   function checkActivity(activity, label, isCore = false) {
     assert(guideIds.has(activity.guide), label + ': unknown guide chapter.');
     const gaps = activityGaps(activity);
@@ -35,7 +61,7 @@ export function validateContent() {
         assert(typeof answer.form === 'string' && answer.form.length > 0, gap.id + ': missing form.');
         assert(['imperfect','preterite','present','perfect','imperative','narrative'].includes(answer.tense), gap.id + ': invalid language target.');
         if (isCore) assert(['imperfect','preterite'].includes(answer.tense), gap.id + ': core stories must practise the two past tenses.');
-        assert(typeof answer.feedback === 'string' && answer.feedback.length >= 45, gap.id + ': feedback must explain the context.');
+        assert(typeof answer.feedback === 'string' && plainText(answer.feedback).length >= 45, gap.id + ': feedback must explain the context.');
         assert(!feedbackUsed.has(answer.feedback), gap.id + ': repeated feedback needs a contextual explanation.'); feedbackUsed.add(answer.feedback);
         if (gap.options) assert(gap.options.includes(answer.form), gap.id + ': answer is not one of the options.');
       }
@@ -68,13 +94,33 @@ export function validateContent() {
     assert(section.blocks.length >= 3, section.id + ': chapter needs developed explanations.');
     section.practice.forEach(id => assert(exerciseIds.has(id), section.id + ': broken practice link ' + id));
   });
-  assert(guideSections.filter(section => section.diagram).length === 4, 'Four interactive guide diagrams are required.');
+  const guideDiagrams = guideSections.flatMap(section => [...(section.diagram ? [section.diagram] : []), ...(section.diagrams || [])]);
+  assert(guideDiagrams.length === 6 && new Set(guideDiagrams).size === 6, 'Six distinct interactive guide diagrams are required.');
+  for (const id of guideDiagrams) assert(Boolean(diagramData[id]), 'Unknown guide diagram: ' + id);
+  const progressiveGuide = guideSections.find(section => section.id === 'past-progressive');
+  assert(progressiveGuide?.diagrams?.includes('progressive-conversation') && progressiveGuide?.diagrams?.includes('progressive-painting'), 'The progressive chapter needs both new illustrated comparisons.');
+  assert(connectorReference.groups.length === 9, 'The quick reference requires nine connector groups.');
+  assert(connectorReference.rows.length === 45, 'The quick reference requires 45 connector rows.');
+  assert(connectorReference.columns.length === 4, 'The reference needs expression, meaning, purpose and usage columns.');
+  const connectorGroups = new Set(connectorReference.groups.map(group => group.id));
+  assert(connectorGroups.size === connectorReference.groups.length, 'Connector group identifiers must be unique.');
+  assert(new Set(connectorReference.rows.map(row => row.spanish)).size === connectorReference.rows.length, 'Connector expressions must not be repeated in separate rows.');
+  for (const group of connectorReference.groups) {
+    assert(Boolean(group.spanish && group.english), group.id + ': bilingual group headings required.');
+    assert(connectorReference.rows.some(row => row.group === group.id), group.id + ': empty connector group.');
+  }
+  for (const row of connectorReference.rows) {
+    assert(connectorGroups.has(row.group), row.spanish + ': unknown connector group.');
+    for (const field of ['spanish','english','useEs','useEn','pattern','example']) assert(typeof row[field] === 'string' && row[field].trim().length > 0, row.spanish + ': missing reference field ' + field);
+  }
+  const anecdoteExplanation = guideSections.find(section => section.id === 'story-tools')?.blocks[0].body || '';
+  assert(anecdoteExplanation.includes('{es}Una vez{/es}') && anecdoteExplanation.includes('{es}un día{/es}'), 'The opening explanation must identify both Spanish occasion markers explicitly.');
   for (const [id, count] of [['story-connectors',12],['time-and-change',10],['progressive-past',12],['voices-and-reactions',10]]) {
     const activity = exercises.find(item => item.id === id);
     assert(activityGaps(activity || {}).length === count, id + ': incorrect revision-block size.');
     assert(activity?.units?.length > 0, id + ': declare course-unit alignment.');
     for (const gap of activityGaps(activity || {})) {
-      if (gap.options) for (const option of gap.options) assert(gap.answers.some(answer => answer.form === option) || gap.wrongAnswers?.some(answer => answer.form === option && answer.feedback?.length >= 35), gap.id + ': each distractor needs its own meaning-based feedback.');
+      if (gap.options) for (const option of gap.options) assert(gap.answers.some(answer => answer.form === option) || gap.wrongAnswers?.some(answer => answer.form === option && plainText(answer.feedback).length >= 35), gap.id + ': each distractor needs its own meaning-based feedback.');
     }
   }
   return { errors, storyWords: stories.map(story => ({ id: story.id, words: wordCount(story) })), objectiveGaps: used.size };

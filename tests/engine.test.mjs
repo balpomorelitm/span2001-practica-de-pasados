@@ -4,6 +4,7 @@ import { normalize, gradeGap, gradeActivity, emptyProgress, parseProgress, entry
 import { stories } from '../dist/content/stories.js';
 import { exercises } from '../dist/content/exercises.js';
 import { validateContent } from '../scripts/check-content.mjs';
+import { formatEnglish, plainText, spanishTerm } from '../dist/formatting.js';
 
 const gap = { id: 'test', cue: 'hablar · él', answers: [{ form:'habló',tense:'preterite',feedback:'Preterite: this is a complete speech event.' }], wrongAnswers:[{form:'hablaron',kind:'person',feedback:'The singular subject requires habló.'},{form:'hablaba',kind:'tense',feedback:'The requested whole-event view uses habló.'}] };
 
@@ -16,6 +17,7 @@ test('spaces, case and Unicode NFC do not cause false errors', () => {
 test('accent-only errors receive half a point without claiming full correctness', () => {
   const result = gradeGap(gap,'hablo');
   assert.equal(result.points,0.5); assert.equal(result.status,'accent'); assert.match(result.feedback,/accent-only/);
+  assert.ok(formatEnglish(result.feedback).includes(spanishTerm('habló')), 'The expected Spanish spelling needs visible language emphasis');
 });
 test('ñ and ü are not reduced to n or u', () => {
   const ownGap={...gap,answers:[{...gap.answers[0],form:'enseñó'}]};
@@ -54,7 +56,8 @@ test('checking a blank answer counts it as an error with the expected form and i
   assert.equal(result.status,'empty'); assert.equal(result.points,0);
   assert.equal(result.label,'Not answered · incorrect');
   assert.match(result.feedback,/No answer: this counts as incorrect \(0 points\)/);
-  assert.match(result.feedback,/expected answer is habló/);
+  assert.match(plainText(result.feedback),/expected answer is habló/);
+  assert.ok(formatEnglish(result.feedback).includes(spanishTerm('habló')), 'The expected Spanish answer needs visible language emphasis');
   assert.ok(result.feedback.endsWith(gap.answers[0].feedback));
   assert.equal(result.answer,gap.answers[0]);
 });

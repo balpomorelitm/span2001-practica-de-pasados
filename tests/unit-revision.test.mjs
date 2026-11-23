@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { activityGaps, CONTENT_VERSION, emptyProgress, entryFor, gradeActivity, gradeGap, parseProgress, recordAttempt } from '../dist/engine.js';
 import { exercises } from '../dist/content/exercises.js';
 import { stories } from '../dist/content/stories.js';
+import { plainText } from '../dist/formatting.js';
 
 const activity = id => [...exercises, ...stories].find(item => item.id === id);
 const gap = (id, gapId) => activityGaps(activity(id)).find(item => item.id === gapId);
@@ -83,7 +84,7 @@ test('a full progressive answer accepts both pronoun positions and gives half cr
   const missingPronoun = gradeGap(inside, 'estaban riendo');
   assert.equal(missingPronoun.points, 0);
   assert.equal(missingPronoun.label, 'Check the conjugation');
-  assert.match(missingPronoun.feedback, /include se/i);
+  assert.match(plainText(missingPronoun.feedback), /include se/i);
   const whole = gap('progressive-past', 'e13g2');
   assert.equal(gradeGap(whole, 'estuve preparando').points, 1);
   assert.match(gradeGap(whole, 'estuve preparando').feedback, /does not say.*finished/i);

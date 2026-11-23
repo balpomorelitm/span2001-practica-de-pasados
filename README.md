@@ -18,7 +18,10 @@ Es necesario servir la carpeta mediante HTTP: abrir `dist/index.html` directamen
 
 ## Qué incluye
 
-- Guía de perspectiva, escenas, duración, descripción, hábitos, narración, cambios de significado, conjugaciones, conectores y estar + gerundio; cuatro diagramas interactivos.
+- Guía de perspectiva, escenas, duración, descripción, hábitos, narración, cambios de significado, conjugaciones, conectores y estar + gerundio; seis diagramas interactivos.
+- Tabla inicial de conectores y marcadores: 45 entradas en nueve grupos, con significado en inglés, función breve en español e inglés, construcción y ejemplo. Las explicaciones desarrolladas aparecen después y tienen un acceso directo desde el inicio de la tabla.
+- Dos comparaciones ilustradas de estar + gerundio: conversación y pintura. Cada una alterna entre un momento dentro de la actividad y el periodo completo; terminar la sesión de pintura no implica terminar el cuadro.
+- Las menciones españolas dentro de la ayuda en inglés aparecen en cursiva y verde oscuro, con identificación de idioma accesible.
 - Trece bloques con 124 respuestas automáticas y un bloque con seis frases de autoevaluación guiada.
 - Veintiún relatos graduados: cinco de 70–100 palabras y ocho huecos; cinco de 100–140 y diez huecos; once de 140–180 y doce huecos. Total: 222 huecos principales.
 - Veintidós respuestas adicionales opcionales, separadas de la nota de los relatos. Practican presente, perfecto compuesto, imperativos afirmativos, una perífrasis de futuro y marcadores narrativos.
@@ -50,21 +53,24 @@ El navegador guarda las respuestas y notas en `localStorage`, bajo `perspectiva.
 ## Archivos y mantenimiento
 
 - `dist/content/guide.js`: explicaciones, tablas y enlaces a la práctica.
+- `dist/content/connector-reference.js`: consulta bilingüe de conectores y marcadores.
 - `dist/content/exercises.js`: bloques, modelos de escritura y respuestas.
 - `dist/content/stories.js`: relatos, glosas, ampliaciones y fuentes históricas.
 - `dist/content/unit-stories.js`, `unit-exercises.js` y `unit-guide.js`: contenido original de la ampliación de unidades 8–10, importado desde las tres colecciones principales.
 - `dist/engine.js`: corrección y puntuación independientes del navegador.
 - `dist/achievements.js` y `dist/achievements.css`: criterios, cálculo y presentación de las veinte medallas.
 - `dist/app.js`, `dist/styles.css`, `dist/institutional.css`, `dist/visuals.js`: interacción, interfaz y diagramas de la guía.
-- `dist/assets/illustrations/`: veintiocho ilustraciones originales generadas: portada, veintiún relatos y seis escenas de la guía, con caricaturas didácticas y fondo blanco.
+- `dist/formatting.js` y `dist/guide-reference.css`: marcado seguro de menciones españolas, tabla adaptable e ilustraciones de estar + gerundio.
+- `dist/assets/illustrations/`: treinta y dos ilustraciones originales generadas: portada, veintiún relatos y diez escenas de la guía, con caricaturas didácticas y fondo blanco.
 - `assets/source-illustrations/` y `assets/illustration-prompts.json`: láminas originales, prompts y correspondencia de recortes.
 - `assets/unit-illustration-prompts.json` y `scripts/crop-unit-illustrations.ps1`: generación, edición y recortes de las seis ilustraciones nuevas, guardadas junto a las anteriores.
+- `assets/progressive-illustration-prompts.json` y `scripts/crop-progressive-illustrations.ps1`: prompt y recortes de las cuatro ilustraciones de conversación y pintura. Los recortes siguen los márgenes observados de la lámina y conservan las proporciones.
 - `dist/assets/achievements/`: veinte medallas PNG con transparencia alfa real, extraídas de una sola lámina generada. `assets/achievement-prompts.json` conserva el prompt; `scripts/crop-achievements.ps1` repite los recortes.
 - `dist/assets/branding/hku-logo.jpg`: identidad original de HKU, sin redibujar. Fuente: https://www.hku.hk/en/about-hku/university-identity/basic-specifications .
 
 Identidad de la interfaz: SPAN2001, Departamento de Español de la Universidad de Hong Kong. Elaborado por Pablo Torrado. Enlace del programa: https://spanish.hku.hk/ . Verde principal HKU: `#024638`.
 
-Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Cada forma aceptada incluye su objetivo lingüístico y su explicación. `narrative` identifica conectores y otras expresiones, sin presentarlos como tiempos verbales. Los cambios que invaliden notas anteriores requieren una migración: `contentRevisions` y `revisedGaps` en `engine.js` renuevan solo las actividades y respuestas afectadas. La revisión de las unidades conserva las demás respuestas; reinicia la nota de las historias 02, 03, 07, 08, 10 y 15 porque cambian algunos objetivos a estar + gerundio. Las historias 06 y 13 conservan sus notas al cambiar únicamente contexto y léxico. La corrección previa de la cocina en la historia 11 mantiene su migración independiente. Un aviso pide volver a comprobar las actividades revisadas. Para cambios globales incompatibles se puede incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento.
+Los huecos se escriben como `{{id}}`; las glosas, como `[[palabra|contextual English explanation]]`. Dentro de explicaciones inglesas, `{es}una vez{/es}` identifica una mención española; el formateador escapa el resto del contenido y no admite HTML arbitrario. Las formas aceptadas, opciones y textos españoles se mantienen sin esos marcadores. Cada forma aceptada incluye su objetivo lingüístico y su explicación. `narrative` identifica conectores y otras expresiones, sin presentarlos como tiempos verbales. Los cambios que invaliden notas anteriores requieren una migración: `contentRevisions` y `revisedGaps` en `engine.js` renuevan solo las actividades y respuestas afectadas. La revisión de las unidades conserva las demás respuestas; reinicia la nota de las historias 02, 03, 07, 08, 10 y 15 porque cambian algunos objetivos a estar + gerundio. Las historias 06 y 13 conservan sus notas al cambiar únicamente contexto y léxico. La corrección previa de la cocina en la historia 11 mantiene su migración independiente. Un aviso pide volver a comprobar las actividades revisadas. Para cambios globales incompatibles se puede incrementar `CONTENT_VERSION` y la versión de la clave de almacenamiento. La actualización visual de la guía no cambia objetivos ni reinicia progreso.
 
 ## Verificación
 
@@ -76,9 +82,11 @@ npm run check:ui
 
 Las pruebas verifican normalización, crédito parcial, ñ, alternativas, diagnósticos, formas compuestas, intentos incompletos y vacíos, conservación de la primera nota, revisión, migraciones, persistencia, autoevaluación y los veinte criterios de medallas. El validador comprueba conteos, extensiones, enlaces a capítulos, IDs, correspondencia de huecos, glosas y cobertura individual de feedback.
 
-`check:ui` renderiza las 61 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los ocho estados de los cuatro diagramas interactivos. También simula comprobaciones parciales y vacías, conservación de notas, alternativas visibles y las interacciones de los nuevos bloques e historias; verifica las veinte medallas en progreso. Las veintiocho ilustraciones web ocupan aproximadamente 2,92 MB en total. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; la lámina de la guía se editó para dar margen a los recortes. Los scripts de recorte permiten repetir la extracción desde las láminas guardadas.
+`check:ui` renderiza las 61 rutas, verifica enlaces relativos y firmas de imágenes, y comprueba los doce estados de los seis diagramas interactivos. Comprueba las 45 entradas y nueve grupos de la tabla, su posición antes del desarrollo y el salto con teclado. También simula comprobaciones parciales y vacías, conservación de notas, alternativas visibles y las interacciones de los bloques e historias; verifica las veinte medallas en progreso. Las 418 explicaciones de respuestas admitidas se renderizan sin exponer marcadores de edición. El calendario conserva sus dos estados SVG originales. Se conservan los PNG y todos los prompts; los scripts de recorte permiten repetir la extracción desde las láminas guardadas.
 
 La validación de plantillas y de interacciones simuladas no sustituye una inspección visual en móvil y escritorio. Todas las imágenes finales se han inspeccionado para revisar el estilo, los objetos y los márgenes de recorte.
+
+En la última revisión de esta guía, el control del navegador no estaba disponible. Queda pendiente la inspección visual de la tabla y los dos diagramas nuevos en móvil y escritorio; los 49 tests, la validación de contenido y las comprobaciones de rutas e interacción sí se han ejecutado.
 
 Para una revisión docente, conviene probar «Dos opciones posibles», leer las respuestas alternativas de los relatos y revisar los dos textos históricos. Los personajes son ficticios; las fechas se apoyan en NASA y Congreso de los Diputados. La guía enlaza a RAE–ASALE y su explicación del aspecto.
 

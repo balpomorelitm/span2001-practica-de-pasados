@@ -1,0 +1,27 @@
+{
+  "created": "2026-11-23",
+  "mode": "built-in imagegen",
+  "prompt": "Use case: illustration-story. Asset type: FOUR original educational cartoon illustrations to crop into two paired grammar comparisons. Generate ONE contact sheet in a strict 2 columns by 2 rows equal-square-cell grid on a pure WHITE background with very generous white gutters and outer margins. Each of the FOUR cells is a fully separate illustration with absolutely no touching between cells; all figures and props safely inside their cell. No captions, letters, numbers, labels, logos, speech bubbles or written text anywhere, including on clocks/books/canvas. Match a warm adult Spanish grammar book comic aesthetic: expressive friendly long-nosed caricature adults, fine black ink lines, simple flat mint/deep-green/ochre/orange palette, a little soft paper texture, clean white surround. Correct anatomy: every adult exactly two arms and two hands, all clearly connected, no floating extra hands. PAIR ONE across top row, SAME woman and SAME room: TOP LEFT is a single scene viewed during an activity: a woman with dark hair in a bun sits comfortably at a small table speaking on a corded telephone, engaged in conversation, cup nearby, simple window behind; no clock face needed. TOP RIGHT is a miniature left-to-right THREE-VIGNETTE comic sequence as ONE illustration, featuring the SAME woman and SAME table/phone: first she lifts the handset, middle she chats on the phone, last she has put the handset down and walks away from the table. Tiny vignettes with plenty of space; no arrows or text. This depicts the full period of a conversation, not three different people together. PAIR TWO across bottom row, SAME young adult painter and SAME canvas: BOTTOM LEFT is a single scene within a painting session, friendly curly-haired young adult at an easel, one hand holding a paintbrush, the other a small palette, painting a simple leafy landscape that is visibly only partly painted, with obvious blank portions on the canvas. BOTTOM RIGHT is a miniature left-to-right THREE-VIGNETTE comic sequence as ONE illustration: same painter starts painting the partly blank canvas; continues painting; then sets down the brush and leaves to take a break, with the SAME canvas STILL CLEARLY UNFINISHED and large blank areas. Important: the painting must NOT be magically complete in the final vignette. This depicts a whole painting session, but an unfinished picture. Keep each whole illustration fully visible with approximately 10% white padding around its cell; sequences are readable small icons, not dense backgrounds. No decorative frames between the FOUR cells. Precisely four separate images.",
+  "source": "assets/source-illustrations/guide-progressive-sheet.png",
+  "layout": "Two rows of paired illustrations; sequences use wider cells. Visually checked crop rectangles: [10,50,565,545], [580,165,720,355], [0,635,570,515], [565,720,745,350].",
+  "cropScript": "scripts/crop-progressive-illustrations.ps1",
+  "outputs": [
+    {
+      "cell": "top left",
+      "file": "dist/assets/illustrations/guide-conversation-inside.jpg"
+    },
+    {
+      "cell": "top right",
+      "file": "dist/assets/illustrations/guide-conversation-whole.jpg"
+    },
+    {
+      "cell": "bottom left",
+      "file": "dist/assets/illustrations/guide-painting-inside.jpg"
+    },
+    {
+      "cell": "bottom right",
+      "file": "dist/assets/illustrations/guide-painting-whole.jpg"
+    }
+  ],
+  "notes": "No generated text. Labels and times are accessible HTML. The bounded painting session deliberately leaves the canvas unfinished."
+}

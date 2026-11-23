@@ -9,6 +9,8 @@ import { exercises } from '../dist/content/exercises.js';
 import { stories } from '../dist/content/stories.js';
 import { guideSections } from '../dist/content/guide.js';
 import { activityGaps } from '../dist/engine.js';
+import { connectorReference } from '../dist/content/connector-reference.js';
+import { formatEnglish, spanishTerm } from '../dist/formatting.js';
 
 const main = { innerHTML:'', focus(){} };
 const windowEvents = new Map();
@@ -25,7 +27,7 @@ globalThis.location={hash:'#/'};
 globalThis.localStorage={getItem:()=>savedProgress,setItem(key,value){savedProgress=value;}};
 globalThis.matchMedia=()=>({matches:true});
 globalThis.window={scrollTo(){},addEventListener:(name,handler)=>windowEvents.set(name,handler)};
-globalThis.document={title:'',querySelector:selector=>domNodes.get(selector)||null,querySelectorAll:()=>[],createElement:()=>({}),addEventListener:(name,handler)=>{
+globalThis.document={title:'',querySelector:selector=>domNodes.get(selector)||null,getElementById:id=>domNodes.get('#'+id)||null,querySelectorAll:()=>[],createElement:()=>({}),addEventListener:(name,handler)=>{
  const handlers=documentEvents.get(name)||[]; handlers.push(handler); documentEvents.set(name,handlers);
 }};
 await import('../dist/app.js');
@@ -36,6 +38,7 @@ const routes=['#/','#/guide','#/practice','#/stories','#/progress',
  ...stories.map(s=>'#/stories/'+s.id),
  ...stories.filter(s=>s.extra).map(s=>'#/stories/'+s.id+'/extra')];
 const assets=new Set();
+const noLanguageMarkup=(html,label)=>assert.doesNotMatch(html,/\{\/?es\}/,`${label}: authored language markers must not leak into the interface`);
 const gatherAssets=html=>{
  for(const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
   const reference=match[1];
@@ -51,6 +54,8 @@ for(const route of routes){
  assert.match(main.innerHTML,/<h1[ >]/,`${route}: missing heading`);
  assert.doesNotMatch(main.innerHTML,/undefined|\[missing answer\]|content-error/,`${route}: broken template`);
  assert.match(document.title,/SPAN2001/,`${route}: missing course identity`);
+ noLanguageMarkup(main.innerHTML,route);
+ noLanguageMarkup(document.title,route+' browser title');
  gatherAssets(main.innerHTML);
  for(const link of main.innerHTML.matchAll(/href="(#\/[^"#]*)"/g)){
   assert.ok(routes.includes(link[1]),`${route}: unknown route ${link[1]}`);
@@ -72,8 +77,43 @@ function checkAnswers(){
  let prevented=false;
  for(const handler of documentEvents.get('submit')||[])handler({target:{id:'answer-form'},preventDefault(){prevented=true;}});
  assert.equal(prevented,true,'Answer checks must use the form handler');
+ noLanguageMarkup(main.innerHTML,location.hash+' feedback');
+ noLanguageMarkup(domNodes.get('#announcer').textContent,location.hash+' accessible announcement');
  return JSON.parse(savedProgress);
 }
+
+// Put the complete bilingual reference before the developed explanations,
+// retaining useful table semantics and a direct keyboard-accessible route on.
+openRoute('#/guide/story-tools');
+const markersArticle=main.innerHTML.match(/<article class="guide-article" id="chapter-story-tools">([\s\S]*?)<\/article>/)?.[1];
+assert.ok(markersArticle,'The marker chapter must render its own article');
+assert.match(markersArticle,/<\/header><section class="connector-reference"/,'The reference must be the first content after the chapter heading');
+const markerTable=markersArticle.match(/<table class="connector-table">([\s\S]*?)<\/table>/)?.[1];
+assert.ok(markerTable,'The marker chapter needs the bilingual quick-reference table');
+assert.match(markerTable,/<caption id="connector-reference-caption">/,'The table needs an accessible caption');
+assert.equal([...markerTable.matchAll(/<tbody data-connector-group=/g)].length,9,'The reference must expose all nine functional groups');
+assert.equal([...markerTable.matchAll(/<th scope="row" /g)].length,45,'The reference must expose all 45 expression rows');
+assert.equal([...markerTable.matchAll(/<th scope="col">/g)].length,4,'The table must explain expression, meaning, purpose and usage');
+for(const row of connectorReference.rows){
+ assert.ok(markerTable.includes(spanishTerm(row.spanish)),row.spanish+': identify the expression as Spanish');
+ assert.ok(markerTable.includes(spanishTerm(row.useEs)),row.spanish+': provide a concise Spanish purpose');
+ assert.ok(markerTable.includes(formatEnglish(row.useEn)),row.spanish+': provide an English purpose');
+ assert.ok(markerTable.includes(spanishTerm(row.pattern)),row.spanish+': show the Spanish construction');
+ assert.ok(markerTable.includes(spanishTerm(row.example)),row.spanish+': show the Spanish example');
+}
+assert.ok(markersArticle.indexOf('</table>')<markersArticle.indexOf('id="chapter-story-tools-explanations"'),'Developed explanations must follow the complete quick reference');
+assert.match(markersArticle,/<p class="article-lead" id="chapter-story-tools-explanations" tabindex="-1">/,'The explanations need an accessible focus target');
+assert.ok(markersArticle.includes(spanishTerm('Una vez'))&&markersArticle.includes(spanishTerm('un día')),'The opening explanation must distinguish both Spanish markers from English');
+let guideFocused=false,guideScrolled=false;
+domNodes.set('#chapter-story-tools-explanations',{focus(){guideFocused=true;},scrollIntoView(){guideScrolled=true;}});
+const jumpButton={dataset:{guideJump:'chapter-story-tools-explanations'}};
+for(const handler of documentEvents.get('click')||[])handler({target:{closest:selector=>selector==='[data-guide-jump]'?jumpButton:null}});
+assert.equal(guideFocused,true,'Continue to explanations must move keyboard focus');
+assert.equal(guideScrolled,true,'Continue to explanations must scroll to the developed explanation');
+assert.equal(location.hash,'#/guide/story-tools','The in-chapter jump must not change the shared route');
+openRoute('#/guide/past-progressive');
+for(const type of ['progressive-conversation','progressive-painting'])assert.ok(main.innerHTML.includes(`data-diagram="${type}"`),`The progressive chapter must render ${type}`);
+
 const train=stories.find(story=>story.id==='story-12');
 openRoute('#/stories/'+train.id);
 typeAnswer('s12g3','tenía');
@@ -93,6 +133,7 @@ const thirdFeedback=main.innerHTML.match(/<article class="feedback-card correct"
 assert.ok(thirdFeedback,'The submitted alternative needs its own correct feedback');
 assert.match(thirdFeedback,/<section class="accepted-readings" aria-label="Other valid readings">/,'Other readings must be an expanded section');
 assert.match(thirdFeedback,/<b lang="es">tuvo<\/b>/,'The other reading must remain visible beside the selected form');
+assert.ok(thirdFeedback.includes(spanishTerm('tenía que mudarse')),'The chosen explanation must highlight its complete Spanish construction');
 assert.doesNotMatch(thirdFeedback,/<details\b|<summary\b|\shidden(?:[=>\s])/,'Accepted readings must not be collapsed or hidden');
 assert.match(domNodes.get('#announcer').textContent,/Checked: 1 out of 12/,'The partial score must be announced accessibly');
 gatherAssets(main.innerHTML);
@@ -211,15 +252,38 @@ for(const number of [16,17,18,19,20,21]){
  gatherAssets(main.innerHTML);
 }
 
+// Every authored explanation is also rendered after checking, including the
+// alternatives which fresh routes do not display. This catches escaping the
+// marker literally in feedback, cues, optional challenges or the models.
+const automaticActivities=[...exercises.filter(activity=>activity.kind!=='writing'),...stories,
+ ...stories.filter(story=>story.extra).map(story=>({...story.extra,id:story.id+'-extra',parentId:story.id}))];
+let checkedFeedbackAnswers=0;
+for(const activity of automaticActivities){
+ const route=activity.parentId?'#/stories/'+activity.parentId+'/extra':
+  '#/'+(activity.id.startsWith('story-')&&/^story-\d+$/.test(activity.id)?'stories':'practice')+'/'+activity.id;
+ openRoute(route);
+ const gaps=activityGaps(activity);
+ for(const gap of gaps)answerGap(gap);
+ checkAnswers();
+ for(const gap of gaps){
+  const html=feedbackFor(gap.id);
+  for(const answer of gap.answers){
+   assert.ok(html.includes(formatEnglish(answer.feedback)),gap.id+': render each accepted reading with its Spanish language markup');
+   checkedFeedbackAnswers++;
+  }
+ }
+ gatherAssets(main.innerHTML);
+}
+
 // Exercise both states through the application's event handler. Route rendering
 // alone only sees the initial state, so missing alternative images go unnoticed.
-assert.deepEqual(Object.keys(diagramData).sort(),['duration','habits','perspective','scene']);
+assert.deepEqual(Object.keys(diagramData).sort(),['duration','habits','perspective','progressive-conversation','progressive-painting','scene']);
 const generatedGuideAssets=new Set();
 for(const [type,data] of Object.entries(diagramData)){
  assert.equal(data.labels.length,2,`${type}: two comparison labels required`);
  assert.equal(data.sentences.length,2,`${type}: two Spanish examples required`);
  assert.equal(data.captions.length,2,`${type}: two explanations required`);
- const fields={'.diagram-art':{innerHTML:''},'.diagram-spanish':{textContent:''},'.diagram-explanation':{textContent:''}};
+ const fields={'.diagram-art':{innerHTML:''},'.diagram-spanish':{textContent:''},'.diagram-explanation':{innerHTML:''}};
  const container={dataset:{diagram:type},querySelector:selector=>fields[selector],querySelectorAll:()=>buttons};
  const buttons=[0,1].map(mode=>({dataset:{mode:String(mode)},selected:false,pressed:'',
   classList:{toggle(name,on){buttons[mode].selected=on;}},
@@ -233,12 +297,14 @@ for(const [type,data] of Object.entries(diagramData)){
   for(const handler of documentEvents.get('click')||[])handler({target});
   assert.equal(fields['.diagram-art'].innerHTML,diagramArt(type,mode),`${type}/${mode}: diagram did not change`);
   assert.equal(fields['.diagram-spanish'].textContent,data.sentences[mode],`${type}/${mode}: Spanish example did not change`);
-  assert.equal(fields['.diagram-explanation'].textContent,data.captions[mode],`${type}/${mode}: explanation did not change`);
+  assert.equal(fields['.diagram-explanation'].innerHTML,formatEnglish(data.captions[mode]),`${type}/${mode}: formatted explanation did not change`);
+  noLanguageMarkup(fields['.diagram-explanation'].innerHTML,`${type}/${mode} caption`);
   buttons.forEach((item,index)=>{
    assert.equal(item.pressed,String(index===mode),`${type}/${mode}: accessible selected state`);
    assert.equal(item.selected,index===mode,`${type}/${mode}: visible selected state`);
   });
   const art=fields['.diagram-art'].innerHTML;
+  noLanguageMarkup(art,`${type}/${mode} art`);
   rendered.push(art); gatherAssets(art);
   if(type==='habits'){
    assert.match(art,/<svg[ >]/,'Keep the interactive calendar as a vector diagram');
@@ -252,7 +318,7 @@ for(const [type,data] of Object.entries(diagramData)){
  }
  assert.notEqual(rendered[0],rendered[1],`${type}: the two modes must have different visual states`);
 }
-assert.equal(generatedGuideAssets.size,6,'Three illustrated comparisons need six distinct image states');
+assert.equal(generatedGuideAssets.size,10,'Five illustrated comparisons need ten distinct generated image states');
 
 const storyImages=new Set();
 for(let index=0;index<stories.length;index++){
@@ -279,4 +345,4 @@ for(const asset of assets){
   assert.ok(valid,`Invalid ${extension} signature: ${asset}`);
  }
 }
-console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; partial/blank submission, visible alternatives, score history and 20 medal cards verified; four new unit blocks and six new stories with separate optional scores respond; all eight diagram states respond, including six generated guide images and the original calendar. Visual browser review is a separate check.`);
+console.log(`${routes.length} routes rendered; ${assets.size} local assets resolved; a 45-row bilingual reference in nine groups precedes its explanations; ${checkedFeedbackAnswers} accepted-answer explanations render without language-marker leaks; partial/blank submission, visible alternatives, score history and 20 medal cards verified; all twelve diagram states respond, including ten generated guide images and the original calendar. Visual browser review is a separate check.`);
