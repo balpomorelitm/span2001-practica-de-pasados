@@ -1,3 +1,5 @@
+import { plainText } from './formatting.js';
+
 const stroke = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
 export function icon(name, size = 22) {
   const paths = {
@@ -27,10 +29,22 @@ export function storyArt(index) {
   return `<img class="story-illustration" src="./assets/illustrations/story-${number}.jpg" alt="" width="627" height="627" loading="lazy" decoding="async">`;
 }
 export const diagramData = {
-  perspective: { title: 'Change your point of view', labels: ['Inside the scene', 'The whole episode'], sentences: ['A las ocho, llovía.', 'Llovió toda la tarde.'], captions: ['You look at the rain at a past moment. Its boundaries are outside your frame.', 'We sum up the rainy afternoon as a whole. The clear sky shows what happened afterwards; llovió does not itself mean “the rain stopped”.'] },
+  perspective: { title: 'Change your point of view', labels: ['Inside the scene', 'The whole episode'], sentences: ['A las ocho, llovía.', 'Llovió toda la tarde.'], captions: ['You look at the rain at a past moment. Its boundaries are outside your frame.', 'We sum up the rainy afternoon as a whole. The clear sky shows what happened afterwards; {es}llovió{/es} does not itself mean “the rain stopped”.'] },
   scene: { title: 'The background and the event', labels: ['Set the scene', 'Move the story on'], sentences: ['Yo leía en el sofá…', '…cuando sonó el teléfono.'], captions: ['Reading is already in progress at the reference moment.', 'The ringing enters that scene as a new event. Both belong to the same story.'] },
-  duration: { title: 'A moment within, or a whole period?', labels: ['A moment within', 'A complete period'], sentences: ['En 2020 trabajaba allí.', 'Trabajé allí de 2017 a 2022.'], captions: ['The reference moment falls inside the period of employment.', 'The timeline presents the complete employment period from 2017 to 2022. The farewell illustrates its endpoint; trabajé does not itself mean “left the job”.'] },
-  habits: { title: 'A routine or a bounded series?', labels: ['A past routine', 'A bounded series'], sentences: ['Antes iba al cine los domingos.', 'Aquel mes fui al cine tres veces.'], captions: ['You describe what Sundays used to be like, without counting a complete series.', 'You count three visits within a particular month. Repetition also works with indefinido.'] }
+  duration: { title: 'A moment within, or a whole period?', labels: ['A moment within', 'A complete period'], sentences: ['En 2020 trabajaba allí.', 'Trabajé allí de 2017 a 2022.'], captions: ['The reference moment falls inside the period of employment.', 'The timeline presents the complete employment period from 2017 to 2022. The farewell illustrates its endpoint; {es}trabajé{/es} does not itself mean “left the job”.'] },
+  habits: { title: 'A routine or a bounded series?', labels: ['A past routine', 'A bounded series'], sentences: ['Antes iba al cine los domingos.', 'Aquel mes fui al cine tres veces.'], captions: ['You describe what Sundays used to be like, without counting a complete series.', 'You count three visits within a particular month. Repetition also works with {es}indefinido{/es}.'] },
+  'progressive-conversation': {
+    title: 'One conversation, two views',
+    labels: ['Inside the conversation', 'The whole conversation'],
+    sentences: ['A las cinco, Ana estaba hablando por teléfono.', 'Ana estuvo hablando por teléfono de cuatro a seis.'],
+    captions: ['{es}Estaba hablando{/es} shows the conversation in progress at five. We are looking at one moment within it; the sentence does not give its beginning or end.', '{es}Estuvo hablando{/es} sums up the conversation from four to six. The sequence shows its beginning, development and end. The activity unfolds in both views; the auxiliary gives a different view of it.']
+  },
+  'progressive-painting': {
+    title: 'A whole session can leave the task unfinished',
+    labels: ['Inside the painting session', 'The whole painting session'],
+    sentences: ['A las cinco, estaba pintando un cuadro.', 'Estuvo pintando de cuatro a seis, pero no terminó el cuadro.'],
+    captions: ['{es}Estaba pintando{/es} places us inside the activity at five. The partially painted canvas is what we see at that moment; the sentence does not tell us whether the painter eventually finished it.', '{es}Estuvo pintando{/es} presents the complete session from four to six. The painter stops, but the canvas still has blank areas. Finishing the period of activity does not necessarily mean finishing the painting.']
+  }
 };
 export function diagramArt(type, mode = 0) {
   const active = mode === 1;
@@ -43,6 +57,14 @@ export function diagramArt(type, mode = 0) {
       { file: 'guide-reading-background.jpg', alt: 'A person is reading on a sofa before a telephone rings.' },
       { file: 'guide-phone-event.jpg', alt: 'The telephone rings while the person is reading on the sofa.' }
     ],
+    'progressive-conversation': [
+      { file: 'guide-conversation-inside.jpg', height: 605, alt: 'Ana talking on the telephone: a moment within the conversation.' },
+      { file: 'guide-conversation-whole.jpg', height: 309, alt: 'Three stages of the same conversation: Ana picks up the handset, talks, then puts it down and leaves.' }
+    ],
+    'progressive-painting': [
+      { file: 'guide-painting-inside.jpg', height: 566, alt: 'A painter at work on a partly painted landscape: a moment within the painting session.' },
+      { file: 'guide-painting-whole.jpg', height: 295, alt: 'The same painter starts, continues and ends a painting session. The canvas remains unfinished when the painter leaves.' }
+    ],
     duration: [
       { file: 'guide-work-inside.jpg', alt: 'An employee at work, seen at a moment within a longer period of employment.' },
       { file: 'guide-work-whole.jpg', alt: 'A period of employment viewed as a whole, from its beginning to its end.' }
@@ -51,11 +73,12 @@ export function diagramArt(type, mode = 0) {
   if (illustrations[type]) {
     const illustration = illustrations[type][active ? 1 : 0];
     const timeline = type === 'duration' ? `<div class="guide-time-comparison ${active ? 'is-whole' : 'is-inside'}" role="img" aria-label="${active ? 'The whole employment period, from 2017 to 2022.' : 'The year 2020 is a moment inside the employment period from 2017 to 2022.'}"><div class="guide-time-heading">${active ? 'The whole period' : 'A moment inside the period'}</div><div class="guide-time-track"><span class="guide-time-boundary start" aria-hidden="true"></span><span class="guide-time-marker" aria-hidden="true"></span><span class="guide-time-boundary end" aria-hidden="true"></span></div><div class="guide-time-years" aria-hidden="true"><span>2017</span><span class="guide-time-reference">2020</span><span>2022</span></div></div>` : '';
-    return `<div class="guide-illustration-panel"><img class="guide-illustration" src="./assets/illustrations/${illustration.file}" alt="${illustration.alt}" width="640" height="640" loading="lazy" decoding="async">${timeline}</div>`;
+    const progressive = type.startsWith('progressive-') ? `<div class="guide-time-comparison progressive-time-comparison ${active ? 'is-whole' : 'is-inside'}" role="img" aria-label="${active ? 'The whole activity period, from 16:00 to 18:00.' : '17:00 is a moment inside the activity period from 16:00 to 18:00.'}"><div class="guide-time-heading">${active ? '16:00–18:00: the whole activity period' : 'At 17:00: a moment within the activity'}</div><div class="guide-time-track"><span class="guide-time-boundary start" aria-hidden="true"></span><span class="guide-time-marker" aria-hidden="true"></span><span class="guide-time-boundary end" aria-hidden="true"></span></div><div class="guide-time-years" aria-hidden="true"><span>16:00</span><span class="guide-time-reference">17:00</span><span>18:00</span></div></div>` : '';
+    return `<div class="guide-illustration-panel"><img class="guide-illustration" src="./assets/illustrations/${illustration.file}" alt="${illustration.alt}" width="627" height="${illustration.height || 627}" loading="lazy" decoding="async">${timeline}${progressive}</div>`;
   }
   let body = '';
   {
     body = `<rect x="69" y="30" width="180" height="159" rx="9" fill="#fff" stroke="#a5bcb9" stroke-width="2"/><path d="M69 64h180" stroke="#a5bcb9" stroke-width="2"/><path d="M104 22v16m108-16v16" stroke="#345766" stroke-width="5" stroke-linecap="round"/>${Array.from({ length: 20 }, (_, i) => { const x = 87 + i % 5 * 36, y = 86 + Math.floor(i / 5) * 28; const selected = active ? [3, 8, 13].includes(i) : i % 5 === 3; return `<circle cx="${x}" cy="${y}" r="9" fill="${selected ? active ? '#cc8158' : '#4d8f7f' : '#e8efec'}"/>`; }).join('')} ${active ? '<path d="M80 181h158" stroke="#cc8158" stroke-width="3"/>' : '<path d="M264 78v100" stroke="#4d8f7f" stroke-width="3" stroke-dasharray="4 5"/>'}`;
   }
-  return `<svg viewBox="0 0 320 220" role="img" aria-label="${diagramData[type].captions[mode]}">${body}</svg>`;
+  return `<svg viewBox="0 0 320 220" role="img" aria-label="${plainText(diagramData[type].captions[mode])}">${body}</svg>`;
 }

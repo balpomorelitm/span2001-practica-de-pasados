@@ -1,0 +1,64 @@
+/* Language changes are explicit in authored English explanations. */
+.spanish-term,
+.guide-article .example > p[lang="es"],
+.diagram-spanish,
+.feedback-answer [lang="es"],
+.accepted-readings b[lang="es"],
+.target-verb b[lang="es"] {
+  color: #07513e;
+  font-style: italic;
+}
+.spanish-term { font-family: inherit; }
+.unanswered-label { font-style: normal; color: var(--muted); }
+.activity-focus { display:flex; flex-wrap:wrap; gap:.4rem 1rem; list-style:none; padding:0; margin-top:1rem; font-size:.85rem; line-height:1.6; color:#496557; }
+.activity-focus li { padding-left:.75rem; border-left:2px solid #a3c9b3; }
+
+/* One complete reference, grouped by function; every row remains visible. */
+.connector-reference { container-type:inline-size; margin-block:1.5rem 2.5rem; }
+.connector-reference > p { font-size:1rem; line-height:1.75; margin-bottom:1rem; }
+.guide-details-link { margin-bottom:.4rem; }
+.connector-reference .table-scroll { border-radius:10px; }
+.connector-table { table-layout:fixed; font-size:.9rem; line-height:1.55; }
+.connector-table caption { padding:1rem; background:#f0f6f2; color:#024638; font-size:1.1rem; font-weight:650; text-align:left; }
+.connector-table th, .connector-table td { white-space:normal; overflow-wrap:anywhere; vertical-align:top; padding:.85rem .7rem; }
+.connector-table thead th:nth-child(1) { width:22%; }
+.connector-table thead th:nth-child(2) { width:18%; }
+.connector-table thead th:nth-child(3) { width:23%; }
+.connector-table thead th:nth-child(4) { width:37%; }
+.connector-table .connector-group th { background:#dfeee4; border-top:1px solid #bfd5c8; padding:.7rem; }
+.connector-group th > span { display:inline-block; color:#496557; font-weight:400; margin-left:.8rem; }
+.connector-table td > span { display:block; }
+.connector-use-es { margin-bottom:.3rem; }
+.connector-pattern { font-weight:600; margin-bottom:.5rem; }
+.connector-example { margin-bottom:.5rem; }
+.connector-note { font-size:.85rem; color:#4c6357; }
+.connector-reference + .article-lead { scroll-margin-top:2rem; }
+
+/* Narrow guide columns use the same semantic table as labelled row cards. */
+@container (max-width:650px) {
+  .connector-table { display:block; table-layout:auto; }
+  .connector-table caption { display:block; }
+  .connector-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  .connector-table tbody { display:block; }
+  .connector-table tr { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); border-bottom:1px solid #cfdfd4; }
+  .connector-table .connector-group { grid-template-columns:minmax(0,1fr); }
+  .connector-table th, .connector-table td { display:block; min-width:0; border:0; padding:.65rem .8rem; }
+  .connector-table tr > td:nth-child(3), .connector-table tr > td:nth-child(4) { grid-column:1 / -1; padding-top:.1rem; }
+  .connector-table tr > td:nth-child(3)::before,
+  .connector-table tr > td:nth-child(4)::before { content:attr(data-label); display:block; font-size:.75rem; color:#526a5c; font-weight:650; margin-bottom:.3rem; }
+  .connector-group th > span { display:block; margin:.25rem 0 0; }
+}
+
+/* The whole-episode images contain a sequence; give them room to read. */
+.diagram[data-diagram^="progressive-"] .diagram-content { grid-template-columns:minmax(0,1fr); gap:1.2rem; }
+.diagram[data-diagram^="progressive-"] .diagram-art { max-width:570px; }
+.diagram[data-diagram^="progressive-"] .guide-illustration { aspect-ratio:auto; max-height:470px; }
+.progressive-time-comparison .guide-time-marker,
+.progressive-time-comparison .guide-time-reference { left:50%; }
+.diagram[data-diagram^="progressive-"] .segmented { width:100%; }
+.diagram[data-diagram^="progressive-"] .segmented button { flex:1; }
+@media (max-width:650px) {
+  .diagram[data-diagram^="progressive-"] .diagram-art { max-width:100%; }
+  .diagram[data-diagram^="progressive-"] .diagram-spanish { font-size:1.15rem; }
+  .diagram[data-diagram^="progressive-"] .segmented button { font-size:.8rem; }
+}
