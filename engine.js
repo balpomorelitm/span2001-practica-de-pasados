@@ -1,8 +1,15 @@
 /** Pure grading and progress functions. No browser or network dependencies. */
 export const CONTENT_VERSION = 1;
 export const STORAGE_KEY = 'perspectiva.progress.v1';
-export const tenseNames = { imperfect: 'Imperfecto', preterite: 'Indefinido', present: 'Presente', perfect: 'Pretérito perfecto', imperative: 'Imperativo afirmativo' };
-const contentRevisions = { 'story-11': 2 };
+export const tenseNames = { imperfect: 'Imperfecto', preterite: 'Indefinido', present: 'Presente', perfect: 'Pretérito perfecto', imperative: 'Imperativo afirmativo', narrative: 'Narrative language' };
+const contentRevisions = { 'story-02': 2, 'story-03': 2, 'story-07': 2, 'story-08': 2, 'story-10': 2, 'story-11': 2, 'story-15': 2 };
+// Only the goals whose required language has changed are cleared. The rest of
+// the learner's answers, and every unaffected activity, remain available.
+const revisedGaps = {
+  'story-02': ['s02g1'], 'story-03': ['s03g4','s03g8'],
+  'story-07': ['s07g5','s07g10'], 'story-08': ['s08g7'],
+  'story-10': ['s10g7','s10g8'], 'story-11': ['s11g2'], 'story-15': ['s15g7']
+};
 function contentRevisionFor(id) { return Object.hasOwn(contentRevisions, id) ? contentRevisions[id] : 1; }
 
 export function normalize(value) {
@@ -19,7 +26,7 @@ export function gradeGap(gap, value) {
   const accent = !gap.options && gap.answers.find(answer => withoutAcute(normalize(answer.form)) === withoutAcute(input));
   if (accent) return { status: 'accent', points: 0.5, label: 'Almost · check the accent', feedback: `The expected spelling is ${accent.form}. This is an accent-only error (½ point). ${accent.feedback}`, answer: accent };
   const known = gap.wrongAnswers?.find(answer => normalize(answer.form) === input);
-  return { status: 'incorrect', points: 0, label: known ? ({ tense: 'Reconsider the tense', person: 'Check the person', form: 'Check the conjugation' }[known.kind] || 'Try again') : 'Revisit this answer', feedback: known?.feedback || gap.answers[0].feedback, answer: gap.answers[0] };
+  return { status: 'incorrect', points: 0, label: known ? ({ tense: 'Reconsider the tense', person: 'Check the person', form: 'Check the conjugation', meaning: 'Check the meaning' }[known.kind] || 'Try again') : 'Revisit this answer', feedback: known?.feedback || gap.answers[0].feedback, answer: gap.answers[0] };
 }
 export function activityGaps(activity) {
   return activity.gaps || (activity.items || []).flatMap(item => item.gaps || []);
@@ -52,10 +59,10 @@ export function parseProgress(raw) {
       entry.submittedNonempty = Object.hasOwn(entry, 'submittedNonempty') ? entry.submittedNonempty === true : Boolean(entry.first) && (entry.completed || Object.values(entry.answers).some(normalize));
       for (const flag of ['checked','dirty','revealed','everRevealed','contentUpdated']) entry[flag] = entry[flag] === true;
       const previousRevision = Number.isSafeInteger(entry.contentRevision) && entry.contentRevision > 0 ? entry.contentRevision : 1;
-      if (id === 'story-11' && previousRevision < contentRevisionFor(id)) {
-        // This gap now asks for physical location (estar), replacing the old ser cue.
-        // Keep the learner's other work, but remove credit earned against that cue.
-        delete entry.answers.s11g2;
+      if (Object.hasOwn(revisedGaps, id) && previousRevision < contentRevisionFor(id)) {
+        // Revised tense or progressive targets need a new score, without
+        // invalidating work against questions that have stayed the same.
+        for (const gapId of revisedGaps[id]) delete entry.answers[gapId];
         for (const field of ['first', 'best', 'latest']) entry[field] = null;
         entry.attempts = 0;
         for (const flag of ['checked','dirty','revealed','everRevealed','completed','submittedNonempty']) entry[flag] = false;
@@ -83,6 +90,8 @@ export function fillTokens(text, gaps) {
   return text.replace(/\{\{([^}]+)\}\}/g, (_, id, offset, source) => {
     const form = gaps.find(gap => gap.id === id)?.answers[0].form || '';
     const prefix = source.slice(0, offset).trimEnd();
-    return !prefix || /[.!?][»”"']?$/.test(prefix) ? form.charAt(0).toLocaleUpperCase('es') + form.slice(1) : form;
+    const beforeOpeningQuote = prefix.replace(/[«“"']$/, '').trimEnd();
+    const startsQuotation = /[«“"']$/.test(prefix) && (!beforeOpeningQuote || /[:.!?]$/.test(beforeOpeningQuote));
+    return !prefix || /[.!?][»”"']?$/.test(prefix) || startsQuotation ? form.charAt(0).toLocaleUpperCase('es') + form.slice(1) : form;
   });
 }

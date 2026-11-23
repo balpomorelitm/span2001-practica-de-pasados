@@ -1,3 +1,5 @@
+import { unitStories } from './unit-stories.js';
+
 const I = (cue, form, feedback, alternatives = []) => ({ cue, answers: [{ form, tense: 'imperfect', feedback }, ...alternatives] });
 const P = (cue, form, feedback, alternatives = []) => ({ cue, answers: [{ form, tense: 'preterite', feedback }, ...alternatives] });
 const A = (form, tense, feedback) => ({ form, tense, feedback });
@@ -27,10 +29,10 @@ Al final, la {{6}} un poco y {{7}} a mi vecina con una caja enorme. Dentro habí
       P('empezar · el gato','empezó','Preterite: the cat starts meowing at a particular moment, when it sees the narrator.')
     ]),
   story(2, 'Una llamada inesperada', 'Good news interrupts an ordinary Saturday lunch.', 'scene', 'Joy',
-    `El sábado, mientras yo {{1}} la comida, mi móvil {{2}}. {{3}} mi hermana, que {{4}} en otra ciudad por su trabajo. Hablábamos casi todos los días, pero aquella vez su voz {{5}} diferente. Me dijo: «¡Ya tengo las llaves de mi nueva casa!».
+    `El sábado, mientras yo {{1}} preparando la comida, mi móvil {{2}}. {{3}} mi hermana, que {{4}} en otra ciudad por su trabajo. Hablábamos casi todos los días, pero aquella vez su voz {{5}} diferente. Me dijo: «¡Ya tengo las llaves de mi nueva casa!».
 
 Entonces yo {{6}} la cuchara sobre la mesa y {{7}} a llorar de alegría. Mi hermana {{8}} y prometió invitarme a cenar. Aquella tarde buscamos juntas unos muebles por internet y elegimos un sofá amarillo.`, [
-      I('preparar · yo','preparaba','Imperfect: the cooking is in progress when the phone rings; we view the call from inside that activity.'),
+      I('estar · yo · preparando is given','estaba','Imperfect: estaba preparando places the cooking in progress when the phone rings. Conjugate estar; preparando stays unchanged.'),
       P('sonar · mi móvil','sonó','Preterite: the phone rings as a new event during the cooking.'),
       I('ser · la persona que llamaba','era','Imperfect: this identifies the caller, supplying information about the situation rather than a new action.'),
       I('vivir · mi hermana','vivía','Imperfect: her life in another city is background relevant at the time of the call.'),
@@ -40,17 +42,17 @@ Entonces yo {{6}} la cuchara sobre la mesa y {{7}} a llorar de alegría. Mi herm
       P('reírse · mi hermana','se rio','Preterite: her laugh is the next reaction in the exchange. Include se. The current spelling rio has no written accent.',[A('se reía','imperfect','Imperfect: se reía describes her laughter as ongoing during the conversation and the promise, rather than presenting one laugh as the next event. Include se.')])
     ]),
   story(3, 'La foto imposible', 'One dog makes a serious family photograph impossible.', 'narrative', 'Laughter',
-    `En la fiesta de mi primo, todos {{1}} una foto seria para la abuela. Mi tío {{2}} una cámara con [[temporizador|self-timer: a camera setting that takes a photograph after a short wait]] y la {{3}} encima de una silla. Mientras nosotros {{4}} frente a la pared, el perro {{5}} con un calcetín en la boca.
+    `En la fiesta de mi primo, todos {{1}} una foto seria para la abuela. Mi tío {{2}} una cámara con [[temporizador|self-timer: a camera setting that takes a photograph after a short wait]] y la {{3}} encima de una silla. Mientras nosotros {{4}} esperando frente a la pared, el perro {{5}} con un calcetín en la boca.
 
-Mi prima {{6}} quitárselo, pero perdió el equilibrio y se sentó. En ese momento la cámara {{7}} la foto. Cuando la vimos, nos {{8}} durante cinco minutos. Ahora está en casa de la abuela.`, [
+Mi prima {{6}} quitárselo, pero perdió el equilibrio y se sentó. En ese momento la cámara {{7}} la foto. Cuando la vimos, nos {{8}} riendo durante cinco minutos. Ahora está en casa de la abuela.`, [
       I('querer · todos nosotros','queríamos','Imperfect: wanting a serious photo is the group’s intention before the unexpected events.',[A('quisimos','preterite','Preterite: quisimos presents wanting or deciding on the serious photograph as a particular group intention at the party.')]),
       I('tener · mi tío','tenía','Imperfect: possession of the camera explains the setup, rather than a new acquisition.'),
       P('poner · mi tío','puso','Preterite: placing the camera on the chair is a completed preparation.'),
-      I('esperar · nosotros','esperábamos','Imperfect: the waiting is in progress when the dog enters.'),
+      I('estar · nosotros · esperando is given','estábamos','Imperfect: estábamos esperando presents the waiting from inside the activity when the dog enters. The accent in estábamos is required.'),
       P('entrar · el perro','entró','Preterite: the dog’s entrance changes the scene and moves the story forward.'),
       P('intentar · mi prima','intentó','Preterite: her attempt to take the sock is one episode followed by losing her balance.',[A('intentaba','imperfect','Imperfect: intentaba places us inside her attempt to take the sock; losing her balance then changes the situation.')]),
       P('hacer · la cámara','hizo','Preterite: the photograph is taken at the particular moment when the cousin is on the floor.'),
-      P('reír · nosotros · nos is already given','reímos','Preterite: the five-minute period of laughter is presented as a complete experience, not a habit.')
+      P('estar · nosotros · nos and riendo are given','estuvimos','Preterite: nos estuvimos riendo presents the full five-minute episode of laughter. Estar + gerund does not force the imperfect; the whole period is bounded.')
     ]),
   story(4, 'Un regalo con historia', 'A small birthday present leaves someone speechless.', 'description', 'A meaningful gift',
     `Mi cumpleaños {{1}} un lunes y yo no esperaba ninguna sorpresa. Como cada lunes, mis amigos {{2}} hasta tarde, así que cené con mis padres. Al terminar, mi madre me {{3}} una caja pequeña. Dentro {{4}} un reloj antiguo.
@@ -79,9 +81,9 @@ Dos días después, mientras {{5}} pan, una niña me {{6}} el brazo. {{7}} mi pa
       P('reconocer · su padre','reconoció','Preterite: recognising the name is the discovery enabling the return of the umbrella.')
     ]),
   story(6, 'Los veranos de mi barrio', 'A summer routine becomes a neighbourhood cinema.', 'habits', 'Childhood',
-    `Cuando {{1}} pequeños, mi hermana y yo {{2}} los veranos en casa de nuestra tía. La casa {{3}} un patio con una fuente y siempre {{4}} a pan tostado por la mañana. Cada tarde, los niños del barrio y yo {{5}} allí mientras los adultos hablaban en la puerta. Una pelota y una cuerda eran suficientes.
+    `A principios de los años 2000, cuando {{1}} pequeños, mi hermana y yo {{2}} los veranos en casa de nuestra tía. La casa {{3}} un patio con una fuente y siempre {{4}} a pan tostado por la mañana. Cada tarde, los niños del barrio y yo {{5}} allí mientras los adultos hablaban en la puerta. Una pelota era suficiente.
 
-Un verano, el ayuntamiento {{6}} nuestra calle durante una semana para arreglar las [[tuberías|pipes: the tubes carrying water under the street]]. Al principio nos enfadamos, pero una vecina {{7}} organizar un cine en su garaje. Nosotros {{8}} una sábana blanca y todos los vecinos {{9}} sillas. Aquella semana {{10}} cuatro películas y descubrimos una forma nueva de estar juntos.`, [
+Un verano, el ayuntamiento {{6}} nuestra calle durante una semana para arreglar las [[tuberías|pipes: the tubes carrying water under the street]]. Al principio nos enfadamos, pero una vecina {{7}} organizar un cine en su garaje. Nosotros {{8}} una sábana blanca y todos los vecinos {{9}} sillas. Aquella semana {{10}} cuatro películas y descubrimos otra forma de estar juntos. Hoy en día ya no hacemos cine allí, pero todavía nos reunimos en el patio.`, [
       I('ser · mi hermana y yo','éramos','Imperfect: childhood is the period from inside which the summer routines are recalled.'),
       I('pasar · mi hermana y yo','pasábamos','Imperfect: los veranos presents a recurring arrangement, rather than counting all visits.'),
       I('tener · la casa','tenía','Imperfect: the patio is a characteristic of the house in the remembered scene.'),
@@ -94,33 +96,33 @@ Un verano, el ayuntamiento {{6}} nuestra calle durante una semana para arreglar 
       P('ver · nosotros','vimos','Preterite: four films form a counted complete series within one week. Repetition also permits a whole-event view.')
     ]),
   story(7, 'Un picnic bajo la lluvia', 'Bad weather changes the plan, but not the afternoon.', 'duration', 'Friends and weather',
-    `El domingo pasado, mis amigos y yo {{1}} a un parque junto al río. Al llegar, el sol {{2}} y apenas {{3}} nubes. Marta {{4}} una tortilla enorme y nosotros teníamos hambre. Extendimos una manta bajo un árbol y sacamos los platos. Mientras Pablo {{5}} el pan, una gota {{6}} sobre su mano. Miramos al cielo: una nube negra tapaba ya el sol.
+    `El domingo pasado, mis amigos y yo {{1}} a un parque junto al río. Al llegar, el sol {{2}} y apenas {{3}} nubes. Marta {{4}} una tortilla enorme y nosotros teníamos hambre. Extendimos una manta bajo un árbol y sacamos los platos. Mientras Pablo {{5}} cortando el pan, una gota {{6}} sobre su mano. Miramos al cielo: una nube negra tapaba ya el sol.
 
-La lluvia {{7}} de repente y todos {{8}} hacia un pequeño [[cobertizo|shelter: a simple roofed structure offering protection from the rain]]. Como el espacio {{9}} muy pequeño, nos sentamos muy juntos y compartimos la tortilla allí. Al final {{10}} dos horas hablando y escuchando la lluvia. No fue el picnic que imaginábamos, pero todavía lo recordamos con cariño.`, [
+La lluvia {{7}} de repente y todos {{8}} hacia un pequeño [[cobertizo|shelter: a simple roofed structure offering protection from the rain]]. Como el espacio {{9}} muy pequeño, nos sentamos muy juntos y compartimos la tortilla allí. Al final {{10}} hablando y escuchando la lluvia durante dos horas. No fue el picnic que imaginábamos, pero todavía lo recordamos con cariño.`, [
       P('ir · mis amigos y yo','fuimos','Preterite: the trip to the park is introduced as one outing last Sunday.'),
       I('brillar · el sol','brillaba','Imperfect: sunshine is the weather the group encounters on arrival, before the change.'),
       I('haber · nubes','había','Imperfect: the lack of clouds describes the initial sky. Existential había remains singular.'),
       I('llevar · Marta','llevaba','Imperfect: this describes what Marta has with her at the picnic.',[A('llevó','preterite','Preterite: llevó reports bringing the tortilla as Marta’s completed contribution to the picnic.')]),
-      I('cortar · Pablo','cortaba','Imperfect: bread-cutting is in progress when the drop falls.'),
+      I('estar · Pablo · cortando is given','estaba','Imperfect: estaba cortando shows the bread-cutting in progress at the moment the drop falls. Only estar changes; cortando is already supplied.'),
       P('caer · una gota','cayó','Preterite: the drop falls as a new event during the bread-cutting.'),
       P('empezar · la lluvia','empezó','Preterite: the onset of rain starts a new phase of the afternoon.'),
       P('correr · todos nosotros','corrimos','Preterite: running to shelter is presented as the group’s complete response.'),
       I('ser · el espacio','era','Imperfect: the shelter’s size explains why everyone sits close together.'),
-      P('pasar · nosotros','pasamos','Preterite: the entire two-hour stay is one complete experience. Duration does not require the imperfect.')
+      P('estar · nosotros · hablando is given','estuvimos','Preterite: estuvimos hablando includes the whole two-hour conversation. It bounds the time spent talking, without suggesting that all possible conversation was finished.')
     ]),
   story(8, 'La maleta equivocada', 'Two similar suitcases nearly disrupt a theatre performance.', 'narrative', 'Travel confusion',
-    `El viernes {{1}} a Sevilla para visitar a una amiga. En la estación {{2}} mucha gente y yo {{3}} bastante cansada después del viaje. Al bajar del tren, {{4}} una maleta azul que parecía la mía. Mi amiga me esperaba junto a la salida y fuimos directamente a su casa.
+    `El otro día {{1}} a Sevilla para visitar a una amiga. En la estación {{2}} mucha gente y yo {{3}} bastante cansada después del viaje. Al bajar del tren, {{4}} una maleta azul que parecía la mía. Mi amiga me esperaba junto a la salida y fuimos directamente a su casa.
 
-Cuando {{5}} la maleta, me quedé mirando el contenido: solo {{6}} [[disfraces|costumes: clothes used to dress as a character or animal]] de animales y zapatos enormes. Mientras yo {{7}} una etiqueta con un nombre, mi teléfono {{8}}. Un hombre muy amable {{9}} mi maleta. Era actor y aquella noche participaba en una obra infantil. Nos encontramos en una cafetería y {{10}} las maletas. ¡Por suerte, el león llegó a tiempo al teatro!`, [
+Más tarde, cuando {{5}} la maleta, me quedé mirando el contenido: solo {{6}} [[disfraces|costumes: clothes used to dress as a character or animal]] de animales y zapatos enormes. Mientras yo {{7}} buscando una etiqueta con un nombre, mi teléfono {{8}}. Resulta que un hombre muy amable {{9}} mi maleta. Era actor y aquella noche participaba en una obra infantil. Nos encontramos en una cafetería y {{10}} las maletas. ¡Qué alivio! El león llegó a tiempo al teatro.`, [
       P('llegar · yo','llegué','Preterite: arrival in Seville begins this visit. Llegar changes g to gu before é.'),
       I('haber · mucha gente','había','Imperfect: the crowd belongs to the station scene on arrival.'),
       I('estar · yo','estaba','Imperfect: tiredness is the narrator’s condition when collecting the luggage.'),
       P('coger · yo','cogí','Preterite: picking up the wrong suitcase is the action creating the problem.'),
       P('abrir · yo','abrí','Preterite: opening the suitcase leads to the discovery and advances the narrative.'),
       I('contener · la maleta','contenía','Imperfect: this describes the contents visible inside the opened suitcase.'),
-      I('buscar · yo','buscaba','Imperfect: the label search is in progress when the telephone rings.'),
+      I('estar · yo · buscando is given','estaba','Imperfect: estaba buscando describes the ongoing label search interrupted by the call. The gerund buscando is already written.'),
       P('sonar · mi teléfono','sonó','Preterite: the ring introduces an event during the search.'),
-      I('tener · un hombre','tenía','Imperfect: possession of the narrator’s suitcase is the situation revealed by the call.'),
+      I('tener · un hombre','tenía','Imperfect: resulta que reveals the existing situation behind the mix-up: the man already has her suitcase. A revelation marker does not automatically require the preterite.'),
       P('cambiar · nosotros','cambiamos','Preterite: exchanging the suitcases completes the solution to the mix-up.')
     ]),
   story(9, 'Mi primer día de trabajo', 'A nervous bookseller mistakes a familiar visitor for a customer.', 'meaning', 'A new job',
@@ -141,15 +143,15 @@ A media mañana {{5}} un señor con un paquete. Yo {{6}} que quería devolver al
   story(10, 'La noche sin luz', 'A power cut gives neighbours a reason to meet.', 'scene', 'Neighbours',
     `El jueves por la noche, mi compañero de piso y yo {{1}} preparando la cena cuando {{2}} todas las luces. Al principio {{3}} que el problema era solo nuestro, pero desde la ventana vimos que la calle también {{4}} a oscuras. Buscamos una [[linterna|torch: a portable electric light; flashlight in American English]] en el armario y bajamos al portal.
 
-Allí {{5}} con varios vecinos. Una señora {{6}} unas velas y un niño {{7}} historias de fantasmas para asustar a su hermano. Mientras los demás {{8}} noticias, nosotros repartimos el pan y el queso que llevábamos para cenar. La luz {{9}} una hora después. Aquella noche no {{10}} el horno, pero conocimos por fin a la gente del edificio.`, [
+Allí {{5}} con varios vecinos. Una señora {{6}} unas velas y un niño {{7}} contando historias de fantasmas para asustar a su hermano. Mientras los demás {{8}} esperando noticias, nosotros repartimos el pan y el queso que llevábamos para cenar. La luz {{9}} una hora después. Aquella noche no {{10}} el horno, pero conocimos por fin a la gente del edificio.`, [
       I('estar · mi compañero y yo','estábamos','Imperfect: estábamos preparando places meal preparation in progress at the power cut.'),
       P('apagarse · todas las luces','se apagaron','Preterite: the lights go out as a new event during cooking. Include se and the plural ending.'),
       P('creer · nosotros','creímos','Preterite: this presents the initial conclusion as a reaction to the lights going out.',[A('creíamos','imperfect','Imperfect: creíamos describes the belief held before looking outside and discovering the wider problem.')]),
       I('estar · la calle','estaba','Imperfect: darkness is the street’s condition when the flatmates look outside.'),
       P('encontrarse · nosotros','nos encontramos','Preterite: meeting the neighbours is the next event after going downstairs. Include nos.'),
       I('tener · una señora','tenía','Imperfect: the candles are something the neighbour has with her in the scene.'),
-      I('contar · un niño','contaba','Imperfect: the story-telling is in progress as the gathering is described.',[A('contó','preterite','Preterite: contó sums up the child’s ghost stories as a complete contribution during the gathering.')]),
-      I('esperar · los demás','esperaban','Imperfect: waiting for news is the ongoing activity during which food is shared.'),
+      I('estar · un niño · contando is given','estaba','Imperfect: estaba contando takes us inside the boy’s storytelling as part of the gathering.',[A('estuvo','preterite','Preterite: estuvo contando sums up the time he spent telling ghost stories as a complete contribution to the gathering; contando remains unchanged.')]),
+      I('estar · los demás · esperando is given','estaban','Imperfect: estaban esperando places the wait for news in progress while the flatmates share their food.'),
       P('volver · la luz','volvió','Preterite: electricity returning ends the episode without power.'),
       P('usar · nosotros','usamos','Preterite: the narrator looks back at the whole evening and reports no oven use during it.')
     ]),
@@ -190,7 +192,7 @@ La estación {{5}} llena y los altavoces anunciaban salidas sin parar. Mientras 
   story(13, 'Lo que cuenta el museo', 'An old station reveals an unexpected local story.', 'duration', 'A local museum',
     `El museo de nuestro pueblo {{1}} una antigua estación de tren. Yo pasaba por delante casi todos los días, pero nunca entraba. Un sábado de noviembre {{2}} visitarlo con mi sobrino. En la entrada nos {{3}} una guía que {{4}} una carpeta llena de fotografías. Nos explicó que la estación conectaba antes varios pueblos de la zona y que muchas familias dependían del [[ferrocarril|railway: the train service and its tracks]].
 
-Mientras ella {{5}}, mi sobrino {{6}} una maleta abierta detrás de un cristal. Dentro {{7}} cartas, una manta y una taza de metal. Según el cartel, aquellos objetos pertenecían a una maestra que llegó al pueblo para abrir una escuela. Durante veinte años, la mujer {{8}} clase en una sala muy pequeña. En una foto {{9}} [[rodeada|surrounded: with people all around her]] de niños, todos muy serios. Entonces mi sobrino {{10}} por qué nadie sonreía. La guía {{11}} y explicó que las personas [[posaban|posed: stayed in a particular position for a photograph]] de otra manera. Al salir, yo {{12}} la antigua estación con más curiosidad.`, [
+Mientras ella {{5}}, mi sobrino {{6}} una maleta abierta detrás de un cristal. Dentro {{7}} cartas, una manta y una taza de metal. Según el cartel, a principios del siglo XX, aquellos objetos pertenecían a una maestra que llegó al pueblo para abrir una escuela y mejorar el acceso a la [[educación|education: learning and teaching, especially at school]]. Durante veinte años, la mujer {{8}} clase en una sala muy pequeña. En una foto {{9}} [[rodeada|surrounded: with people all around her]] de niños, todos muy serios. Entonces mi sobrino {{10}} por qué nadie sonreía. La guía {{11}} y explicó que las personas [[posaban|posed: stayed in a particular position for a photograph]] de otra manera. Al salir, yo {{12}} la antigua estación con más curiosidad.`, [
       I('ocupar · el museo','ocupaba','Imperfect: the old station is the museum’s location at the time of the visit, setting the scene.'),
       P('decidir · yo','decidí','Preterite: this decision breaks the routine of passing without entering.'),
       P('recibir · una guía','recibió','Preterite: the welcome is the next event on entering the museum.'),
@@ -222,20 +224,42 @@ El [[módulo lunar|lunar module: the spacecraft section that landed on the Moon]
       P('dibujar · la niña','dibujó','Preterite: drawing the spacecraft is the next action after the transmission.')
     ], { title: 'Optional: a recent event and a present understanding', text: 'Esta semana, Clara {{1}} una entrevista sobre aquella noche. «Ahora {{2}} mejor la historia de mi familia», dice su nieto.', gaps: [extraGap('grabar · Clara · recent event','ha grabado','perfect','Present perfect: this week is treated as a current frame connecting the interview with now.',[A('grabó','preterite','Preterite: the interview is viewed as a completed event this week, a natural regional alternative.')]),extraGap('entender · yo · present indicative','entiendo','present','Present: the grandson describes his understanding now, after hearing the interview.')] }, 'Clara, her family and the neighbours are fictional. Apollo 11 landed on 20 July 1969 at 20:17 UTC; Armstrong’s first step was on 21 July at 02:56 UTC, in the early hours in Spain.', [{ title:'NASA · Apollo 11 mission timeline',url:'https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_11i_Timeline.htm' }]),
   story(15, 'Un barrio en junio de 1977', 'A fictional shopkeeper experiences Spain’s general election of 1977.', 'scene', 'History · Spain’s transition',
-    `En junio de 1977, Carmen {{1}} en una pequeña tienda de Madrid. Cada mañana {{2}} a las nueve y colocaba el pan junto a la puerta. Por entonces, los vecinos {{3}} mucho de política, aunque no todos pensaban igual. Carmen {{4}} treinta años y era la primera vez que participaba en unas elecciones generales. En su familia se mezclaban la ilusión y los nervios.
+    `En junio de 1977, Carmen {{1}} en una pequeña tienda de Madrid. Cada mañana {{2}} a las nueve y colocaba el pan junto a la puerta. Por entonces, los vecinos {{3}} mucho de democracia y [[libertad de expresión|freedom of expression: the right to express opinions]], aunque no todos pensaban igual. Carmen {{4}} treinta años y era la primera vez que participaba en unas elecciones generales. En su familia se mezclaban la ilusión y los nervios.
 
-El 15 de junio {{5}} de casa temprano para votar. En la calle {{6}} carteles de distintos [[partidos|political parties: organised groups competing in the election]] y una fila de personas esperaba ante el [[colegio electoral|polling station: the place where people vote, often a school building]]. Mientras Carmen {{7}} lentamente, un vecino le {{8}} que llevaba décadas esperando aquel momento. Ella escuchó sin interrumpir. Al entrar, {{9}} su [[mesa|polling table: the assigned desk where a voter’s identity is checked]] y {{10}} su documento de identidad. Después de votar, {{11}} a la tienda y {{12}} la fecha en un calendario. Aquella noche cenó con su madre y escucharon las noticias. Para Carmen, aquel día formaba parte de un cambio que todavía estaba aprendiendo a entender.`, [
+El 15 de junio {{5}} de casa temprano para votar. En la calle {{6}} carteles de distintos [[partidos|political parties: organised groups competing in the election]] y una fila de personas esperaba ante el [[colegio electoral|polling station: the place where people vote, often a school building]]. Mientras Carmen {{7}} avanzando lentamente, un vecino le {{8}} que llevaba décadas esperando aquel momento. Ella escuchó sin interrumpir. Al entrar, {{9}} su [[mesa|polling table: the assigned desk where a voter’s identity is checked]] y {{10}} su documento de identidad. Después de votar, {{11}} a la tienda y {{12}} la fecha en un calendario. Aquella noche cenó con su madre y escucharon las noticias. Para Carmen, aquel día formaba parte de un cambio que todavía estaba aprendiendo a entender.`, [
       I('trabajar · Carmen','trabajaba','Imperfect: her job is background about life at this point in the democratic transition.',[A('trabajó','preterite','Preterite: trabajó presents her work in the shop during June 1977 as a complete period, before the narrative describes its daily routines.')]),
       I('abrir · Carmen','abría','Imperfect: cada mañana presents opening the shop as a daily routine.'),
       I('hablar · los vecinos','hablaban','Imperfect: por entonces recalls political conversations as a recurring feature of neighbourhood life.'),
       I('tener · Carmen','tenía','Imperfect: her age describes her circumstances at election time.'),
       P('salir · Carmen','salió','Preterite: leaving home begins the events on election day.'),
       I('haber · carteles','había','Imperfect: the posters belong to the street scene. Existential había stays singular.'),
-      I('avanzar · Carmen','avanzaba','Imperfect: moving through the queue is in progress when the neighbour speaks.'),
+      I('estar · Carmen · avanzando is given','estaba','Imperfect: estaba avanzando places her slow movement through the queue in progress when the neighbour speaks; avanzando is already written.'),
       P('contar · un vecino','contó','Preterite: the remark is a particular conversational event during the wait.',[A('contaba','imperfect','Imperfect: contaba presents the neighbour’s story as unfolding alongside Carmen’s movement through the queue.')]),
       P('buscar · Carmen','buscó','Preterite: looking for the assigned desk is the first narrated step inside. Buscar describes the search, not automatically finding it.'),
       P('mostrar · Carmen','mostró','Preterite: showing her identity document is the next completed step.'),
       P('volver · Carmen','volvió','Preterite: returning to the shop follows voting in the sequence.'),
       P('anotar · Carmen','anotó','Preterite: writing down the date is a particular action marking the day’s importance.')
-    ], { title: 'Optional: a diary connecting past and present', text: 'En su diario, Carmen escribe: «Hoy {{1}} por primera vez. Ahora {{2}} que mi voz también cuenta».', gaps: [extraGap('votar · yo · completed event today','he votado','perfect','Present perfect: Carmen connects today’s vote with her present feelings, a common choice in Spain.',[A('voté','preterite','Preterite: Carmen presents the vote as a completed event today, a natural regional alternative.')]),extraGap('saber · yo · present indicative','sé','present','Present: this is what Carmen knows now. The accent distinguishes sé from the pronoun se.')] }, 'Carmen, her family and the neighbour are fictional. The general election of 15 June 1977 was Spain’s first democratic general election since 1936. The personal experience is imagined within that documented event.', [{ title:'Congreso de los Diputados · 15 June 1977 and the Constitution', url:'https://blog.congreso.es/15-de-junio-de-1977-linea-de-salida-hacia-la-constitucion/' }])
+    ], { title: 'Optional: a diary connecting past and present', text: 'En su diario, Carmen escribe: «Hoy {{1}} por primera vez. Ahora {{2}} que mi voz también cuenta».', gaps: [extraGap('votar · yo · completed event today','he votado','perfect','Present perfect: Carmen connects today’s vote with her present feelings, a common choice in Spain.',[A('voté','preterite','Preterite: Carmen presents the vote as a completed event today, a natural regional alternative.')]),extraGap('saber · yo · present indicative','sé','present','Present: this is what Carmen knows now. The accent distinguishes sé from the pronoun se.')] }, 'Carmen, her family and the neighbour are fictional. The general election of 15 June 1977 was Spain’s first democratic general election since 1936. The personal experience is imagined within that documented event.', [{ title:'Congreso de los Diputados · 15 June 1977 and the Constitution', url:'https://blog.congreso.es/15-de-junio-de-1977-linea-de-salida-hacia-la-constitucion/' }]),
+  ...unitStories
 ];
+
+const courseAlignment = {
+  'story-01': { units: [8, 10], focus: ['Fear and physical reactions', 'Background and sudden events'] },
+  'story-02': { units: [10], focus: ['Estar + gerund in the imperfect', 'Joy and emotional reactions'] },
+  'story-03': { units: [10], focus: ['Estaba and estuvo + gerund', 'A complete episode of laughter'] },
+  'story-04': { units: [9, 10], focus: ['Family habits and a particular gift', 'Quedarse sin palabras'] },
+  'story-05': { units: [10], focus: ['Weather as background', 'An activity interrupted by an event'] },
+  'story-06': { units: [9, 10], focus: ['Childhood and historical-period markers', 'Past habits and a counted series', 'Ya no and todavía + present'] },
+  'story-07': { units: [10], focus: ['Estaba and estuvo + gerund', 'An interruption and a whole two-hour period'] },
+  'story-08': { units: [10], focus: ['Narrative sequence and resulta que', 'Estar + gerund in the imperfect', 'An expression of relief'] },
+  'story-09': { units: [8, 10], focus: ['Nervousness and emotional reactions', 'Thinking and managing to do something'] },
+  'story-10': { units: [10], focus: ['Estar + gerund and simultaneous activities', 'A sudden event and a delayed outcome'] },
+  'story-11': { units: [8, 9, 10], focus: ['Childhood routines', 'Estar for location and taste', 'Affirmative tú instructions'] },
+  'story-12': { units: [9, 10], focus: ['Old routines and a particular goodbye', 'Emotional background', 'Present routines and plans'] },
+  'story-13': { units: [9, 10], focus: ['A historical-period marker and education vocabulary', 'A whole period and a scene', 'A fictional museum account'] },
+  'story-14': { units: [9, 10], focus: ['A dated historical event', 'A scene and a sequence', 'Fiction within documented history'] },
+  'story-15': { units: [9, 10], focus: ['Democracy and freedom-of-expression vocabulary', 'Estar + gerund during an event', 'History and personal experience'] }
+};
+for (const item of stories) {
+  if (courseAlignment[item.id]) Object.assign(item, courseAlignment[item.id]);
+}

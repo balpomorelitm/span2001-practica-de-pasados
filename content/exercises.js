@@ -1,3 +1,4 @@
+import { unitExercises } from './unit-exercises.js';
 const A = (form, tense, feedback) => ({ form, tense, feedback });
 const G = (id, cue, answers, options, wrongAnswers = []) => ({ id, cue, answers, ...(options ? { options } : {}), wrongAnswers });
 const Q = (id, text, ...gaps) => ({ id, text, gaps });
@@ -160,5 +161,6 @@ export const exercises = [
       { id:'e10i5',text:'Expresa el momento de descubrir una noticia. Usa saber con yo y una perspectiva de acontecimiento.',model:'Al abrir el mensaje, supe la noticia.',variants:['Supe la noticia al leer el periódico.','Por fin supe la verdad.'],target:'supe',formFeedback:'Check supe, the irregular yo preterite of saber. Sabía is grammatical but expresses a different viewpoint.',meaningFeedback:'Award this point if you mean finding out or coming to know. Sabía describes knowledge already held.',guide:'meaning' },
       { id:'e10i6',text:'Describe una costumbre de otra época. Usa leer con vosotros en imperfecto.',model:'Antes leíais un cuento cada noche.',variants:['De pequeños, vosotros leíais en el jardín.','En aquella época leíais juntos después de cenar.'],target:'leíais',formFeedback:'Check leíais, including í. Leíamos changes the subject; leísteis changes the tense.',meaningFeedback:'Award this point if you describe a routine from inside a past period, rather than a closed count of readings.',guide:'habits' }
     ]
-  }
+  },
+  ...unitExercises
 ];
